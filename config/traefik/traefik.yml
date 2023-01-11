@@ -1,0 +1,43 @@
+## traefik.yml
+#
+## Docker configuration backend
+providers:
+  docker:
+    exposedByDefault: false
+    constraints: "Label(`cluster.name`, `purr.services`)"
+  file:
+    directory: /etc/traefik
+    watch: true
+
+# API and dashboard configuration
+api:
+  dashboard: true
+
+entrypoints:
+  http:
+    address: ":80"
+    http:
+      redirections:
+        entryPoint:
+          to: https
+          scheme: https
+  https:
+    address: ":443"
+
+certificatesResolvers:
+  le:
+    acme:
+      email: admins@moomers.org
+      storage: /acme/acme.json
+      httpChallenge:
+        entrypoint: http
+      tlsChallenge: {}
+    
+# http config
+http:
+  middlewares:
+    moodmins_auth: # the name of the auth middleware
+      basicAuth:
+        realm: "Moodmins service login"
+        users: # example: `htpasswd -nB igor`
+          - igor:$2y$05$HrM1NyKnjNAimkdQL2uvUOc1JRcSOSJr9PeA3tRXGqGtYUMGcENjO

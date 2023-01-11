@@ -1,0 +1,15 @@
+[Unit]
+Description=purr docker compose services
+
+[Service]
+WorkingDirectory=/root/purr.services
+Type=simple
+Restart=always
+RestartSec=10
+ExecStart=docker compose up --remove-orphans
+ExecReload=docker compose up --wait --detach --remove-orphans
+ExecStop=docker compose stop
+SuccessExitStatus=130
+
+[Install]
+WantedBy=multi-user.target
