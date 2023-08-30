@@ -37,6 +37,7 @@ services:
       - "traefik.http.routers.mmrs.tls=true"
       - "traefik.http.routers.mmrs.tls.certresolver=cf"
       - "traefik.http.routers.mmrs.entrypoints=https"
+      - "traefik.http.services.mmrs.loadbalancer.server.port=8000"
 
   # Watchtower upgrades services automatically
   watchtower:
