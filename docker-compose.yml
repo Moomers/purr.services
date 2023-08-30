@@ -27,7 +27,7 @@ services:
 
   # mmrs.link link shortening service
   mmrs:
-    image: ghcr.io/igor47/smrs:v0.1.0
+    image: ghcr.io/igor47/smrs:v0.1.1
     restart: unless-stopped
     container_name: mmrs.link
     labels:
