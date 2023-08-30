@@ -40,4 +40,4 @@ http:
       basicAuth:
         realm: "Moodmins service login"
         users: # example: `htpasswd -nB igor`
-          - igor:$2y$05$HrM1NyKnjNAimkdQL2uvUOc1JRcSOSJr9PeA3tRXGqGtYUMGcENjO
+          - igor:$2y$05$j4IketELcP4gX1YNa2JWbe//YnMkinDkVTxxO7uyOO4F/2ow5SnaC
