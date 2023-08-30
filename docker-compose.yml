@@ -23,6 +23,19 @@ services:
       - ${REPO}/config/traefik:/etc/traefik
       - ${STORAGE}/traefik/acme:/acme
 
+  # mmrs.link link shortening service
+  mmrs:
+    image: ghcr.io/igor47/smrs:v0.1.0
+    restart: unless-stopped
+    container_name: mmrs.link
+    labels:
+      - "traefik.enable=true"
+      - "cluster.name=purr.services"
+      - "traefik.http.routers.mmrs.rule=Host(`mmrs.link`,`www.mmrs.link`)"
+      - "traefik.http.routers.mmrs.tls=true"
+      - "traefik.http.routers.mmrs.tls.certresolver=le"
+      - "traefik.http.routers.mmrs.entrypoints=https"
+
   # Watchtower upgrades services automatically
   watchtower:
     restart: unless-stopped
