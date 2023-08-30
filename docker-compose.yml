@@ -22,6 +22,8 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - ${REPO}/config/traefik:/etc/traefik
       - ${STORAGE}/traefik/acme:/acme
+    env_file:
+      - ${STORAGE}/traefik/cloudflare.env
 
   # mmrs.link link shortening service
   mmrs:
@@ -33,7 +35,7 @@ services:
       - "cluster.name=purr.services"
       - "traefik.http.routers.mmrs.rule=Host(`mmrs.link`,`www.mmrs.link`)"
       - "traefik.http.routers.mmrs.tls=true"
-      - "traefik.http.routers.mmrs.tls.certresolver=le"
+      - "traefik.http.routers.mmrs.tls.certresolver=cf"
       - "traefik.http.routers.mmrs.entrypoints=https"
 
   # Watchtower upgrades services automatically

@@ -32,6 +32,18 @@ certificatesResolvers:
       httpChallenge:
         entrypoint: http
       tlsChallenge: {}
+
+  # for zones behind cloudflare proxied DNS, we use the cloudflare dns provider
+  # see:
+  #   https://www.techaddressed.com/tutorials/certbot-cloudflare-reverse-proxy/
+  # this relies on credentials in a file on purr. see the `env_file` directive in
+  # docker-compose for traefik
+  cf:
+    acme:
+      email: admins@moomers.org
+      storage: /acme/acme-cf.json
+      dnsChallenge:
+        provider: "cloudflare"
     
 # http config
 http:
