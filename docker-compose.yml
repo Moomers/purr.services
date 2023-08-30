@@ -38,6 +38,10 @@ services:
       - "traefik.http.routers.mmrs.tls.certresolver=cf"
       - "traefik.http.routers.mmrs.entrypoints=https"
       - "traefik.http.services.mmrs.loadbalancer.server.port=8000"
+    volumes:
+      # create this directory, then `chown 82:82 mmrs/data` (that's the UID inside the container)
+      - ${STORAGE}/mmrs/data:/smrs/data
+
 
   # Watchtower upgrades services automatically
   watchtower:
