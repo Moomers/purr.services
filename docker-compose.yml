@@ -94,6 +94,7 @@ services:
     depends_on:
       - postgres.purr
       - redis.purr
+      - authentik.worker
 
   authentik.worker:
     image: ${AUTHENTIK_IMAGE:-ghcr.io/goauthentik/server}:${AUTHENTIK_TAG:-2023.8.3}
