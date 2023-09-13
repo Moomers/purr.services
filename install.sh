@@ -48,7 +48,6 @@ then
 fi
 
 
-
 # install the systemd unit file
 cp ${REPO}/compose.service /etc/systemd/system/
 systemctl daemon-reload
