@@ -136,7 +136,7 @@ services:
       - "traefik.http.routers.whoami.tls=true"
       - "traefik.http.routers.whoami.tls.certresolver=le"
       ## Middlewares
-      - "traefik.http.routers.whoami.middlewares=middlewares-authentik@file"
+      #- "traefik.http.routers.whoami.middlewares=middlewares-authentik@file"
 
   # Watchtower upgrades services automatically
   watchtower.purr:
