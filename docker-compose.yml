@@ -1,10 +1,9 @@
 version: '3.9'
 
 services:
-  traefik:
+  traefik.purr:
     image: traefik:v2.9
     restart: unless-stopped
-    container_name: traefik.purr
     labels:
       - "traefik.enable=true"
       - "cluster.name=purr.services"
@@ -26,10 +25,9 @@ services:
       - ${STORAGE}/traefik/cloudflare.env
 
   # mmrs.link link shortening service
-  mmrs:
+  mmrs.link:
     image: ghcr.io/igor47/smrs:v0.1.1
     restart: unless-stopped
-    container_name: mmrs.link
     labels:
       - "traefik.enable=true"
       - "cluster.name=purr.services"
@@ -42,12 +40,119 @@ services:
       # create this directory, then `chown 82:82 mmrs/data` (that's the UID inside the container)
       - ${STORAGE}/mmrs/data:/smrs/data
 
+  redis.purr:
+    image: docker.io/library/redis:alpine
+    command: --save 60 1 --loglevel warning
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
+      start_period: 20s
+      interval: 30s
+      retries: 5
+      timeout: 3s
+    volumes:
+      - ${STORAGE}/redis/data:/data
+
+  postgres.purr:
+    image: docker.io/library/postgres:12-alpine
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}"]
+      start_period: 20s
+      interval: 30s
+      retries: 5
+      timeout: 5s
+    volumes:
+      - ${STORAGE}/postgres/data:/var/lib/postgresql/data
+      - ${REPO}/init_scripts:/init_scripts
+    environment:
+      POSTGRES_USER: ${PG_ADMIN_USER:?database admin username required}
+      POSTGRES_PASSWORD: ${PG_ADMIN_PASS:?database admin password required}
+    env_file:
+      - ${STORAGE}/postgres/env
+      # we give it authentik creds so we can run init_scripts/authentik_db.sh
+      - ${STORAGE}/authentik/env
+
+  authentik:
+    image: ${AUTHENTIK_IMAGE:-ghcr.io/goauthentik/server}:${AUTHENTIK_TAG:-2023.8.3}
+    restart: unless-stopped
+    command: server
+    labels:
+      - "traefik.enable=true"
+      - "cluster.name=purr.services"
+      - "traefik.http.routers.authentik.rule=Host(`auth.moomers.org`)"
+      - "traefik.http.routers.authentik.tls=true"
+      - "traefik.http.routers.authentik.tls.certresolver=le"
+      - "traefik.http.routers.authentik.entrypoints=https"
+      - "traefik.http.services.authentik.loadbalancer.server.port=9000"
+    environment:
+      AUTHENTIK_REDIS__HOST: redis.purr
+      AUTHENTIK_POSTGRESQL__HOST: postgres.purr
+      AUTHENTIK_POSTGRESQL__USER: ${AUTHENTIK_PG_USER:?authentik postgresql username required}
+      AUTHENTIK_POSTGRESQL__PASSWORD: ${AUTHENTIK_PG_PASS:?authentik postgresql password required}
+      AUTHENTIK_POSTGRESQL__NAME: ${AUTHENTIK_PG_DB:?authentik postgresql database name required}
+      AUTHENTIK_EMAIL__FROM: "Moomers Auth <authentik@moomers.org>"
+    volumes:
+      - ${STORAGE}/authentik/media:/media
+      - ${STORAGE}/authentik/templates:/templates
+    env_file:
+      - ${STORAGE}/authentik/env
+    ports:
+      - "${COMPOSE_PORT_HTTP:-9000}:9000"
+      - "${COMPOSE_PORT_HTTPS:-9443}:9443"
+    depends_on:
+      - postgres.purr
+      - redis.purr
+
+  authentik.worker:
+    image: ${AUTHENTIK_IMAGE:-ghcr.io/goauthentik/server}:${AUTHENTIK_TAG:-2023.8.3}
+    restart: unless-stopped
+    command: worker
+    environment:
+      AUTHENTIK_REDIS__HOST: redis.purr
+      AUTHENTIK_POSTGRESQL__HOST: postgres.purr
+      AUTHENTIK_POSTGRESQL__USER: ${AUTHENTIK_PG_USER:?authentik postgresql username required}
+      AUTHENTIK_POSTGRESQL__PASSWORD: ${AUTHENTIK_PG_PASS:?authentik postgresql password required}
+      AUTHENTIK_POSTGRESQL__NAME: ${AUTHENTIK_PG_DB:?authentik postgresql database name required}
+      AUTHENTIK_EMAIL__FROM: "Moomers Auth <authentik@moomers.org>"
+    # `user: root` and the docker socket volume are optional.
+    # See more for the docker socket integration here:
+    # https://goauthentik.io/docs/outposts/integrations/docker
+    # Removing `user: root` also prevents the worker from fixing the permissions
+    # on the mounted folders, so when removing this make sure the folders have the correct UID/GID
+    # (1000:1000 by default)
+    user: root
+    volumes:
+      - ${STORAGE}/authentik/media:/media
+      - ${STORAGE}/authentik/templates:/templates
+      - ${STORAGE}/authentik/certs:/certs
+      #- /var/run/docker.sock:/var/run/docker.sock
+    env_file:
+      - ${STORAGE}/authentik/env
+    depends_on:
+      - postgres.purr
+      - redis.purr
+
+  # whoami?
+  whoami.purr:
+    image: traefik/whoami
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    labels:
+      - "traefik.enable=true"
+      ## HTTP Routers
+      - "traefik.http.routers.whoami.rule=Host(`whoami.moomers.org`)"
+      - "traefik.http.routers.whoami.entrypoints=websecure"
+      - "traefik.http.routers.whoami.tls=true"
+      - "traefik.http.routers.whoami.tls.certresolver=le"
+      ## Middlewares
+      - "traefik.http.routers.whoami.middlewares=middlewares-authentik@file"
 
   # Watchtower upgrades services automatically
-  watchtower:
+  watchtower.purr:
     restart: unless-stopped
     image: containrrr/watchtower
-    container_name: watchtower.purr
     labels:
       - "traefik.enable=false"
       - "cluster.name=purr.services"
