@@ -29,8 +29,8 @@ mkdir -p ${STORAGE}/postgres/data
 if [ ! -f "${STORAGE}/postgres/env" ]
 then
   echo "Please create ${STORAGE}/postgres/env with the following content:"
-  echo "PG_ADMIN_USER=..."
-  echo "PG_ADMIN_PASS=..."
+  echo "POSTGRES_USER=..."
+  echo "POSTGRES_PASSWORD=..."
   exit 1
 fi
 
@@ -39,9 +39,9 @@ mkdir -p ${STORAGE}/authentik/media ${STORAGE}/authentik/templates
 if [ ! -f "${STORAGE}/authentik/env" ]
 then
   echo "Please create ${STORAGE}/authentik/env with the following content:"
-  echo "AUTHENTIK_PG_USER=..."
-  echo "AUTHENTIK_PG_PASS=..."
-  echo "AUTHENTIK_PG_DB=..."
+  echo "AUTHENTIK_POSTGRESQL__USER=..."
+  echo "AUTHENTIK_POSTGRESQL__PASSWORD=..."
+  echo "AUTHENTIK_POSTGRESQL__NAME=..."
   echo "AUTHENTIK_SECRET_KEY=..."
 
   exit 1

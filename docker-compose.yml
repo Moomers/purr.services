@@ -65,9 +65,6 @@ services:
     volumes:
       - ${STORAGE}/postgres/data:/var/lib/postgresql/data
       - ${REPO}/init_scripts:/init_scripts
-    environment:
-      POSTGRES_USER: ${PG_ADMIN_USER:?database admin username required}
-      POSTGRES_PASSWORD: ${PG_ADMIN_PASS:?database admin password required}
     env_file:
       - ${STORAGE}/postgres/env
       # we give it authentik creds so we can run init_scripts/authentik_db.sh
@@ -88,18 +85,12 @@ services:
     environment:
       AUTHENTIK_REDIS__HOST: redis.purr
       AUTHENTIK_POSTGRESQL__HOST: postgres.purr
-      AUTHENTIK_POSTGRESQL__USER: ${AUTHENTIK_PG_USER:?authentik postgresql username required}
-      AUTHENTIK_POSTGRESQL__PASSWORD: ${AUTHENTIK_PG_PASS:?authentik postgresql password required}
-      AUTHENTIK_POSTGRESQL__NAME: ${AUTHENTIK_PG_DB:?authentik postgresql database name required}
       AUTHENTIK_EMAIL__FROM: "Moomers Auth <authentik@moomers.org>"
     volumes:
       - ${STORAGE}/authentik/media:/media
       - ${STORAGE}/authentik/templates:/templates
     env_file:
       - ${STORAGE}/authentik/env
-    ports:
-      - "${COMPOSE_PORT_HTTP:-9000}:9000"
-      - "${COMPOSE_PORT_HTTPS:-9443}:9443"
     depends_on:
       - postgres.purr
       - redis.purr
@@ -111,9 +102,6 @@ services:
     environment:
       AUTHENTIK_REDIS__HOST: redis.purr
       AUTHENTIK_POSTGRESQL__HOST: postgres.purr
-      AUTHENTIK_POSTGRESQL__USER: ${AUTHENTIK_PG_USER:?authentik postgresql username required}
-      AUTHENTIK_POSTGRESQL__PASSWORD: ${AUTHENTIK_PG_PASS:?authentik postgresql password required}
-      AUTHENTIK_POSTGRESQL__NAME: ${AUTHENTIK_PG_DB:?authentik postgresql database name required}
       AUTHENTIK_EMAIL__FROM: "Moomers Auth <authentik@moomers.org>"
     # `user: root` and the docker socket volume are optional.
     # See more for the docker socket integration here:
