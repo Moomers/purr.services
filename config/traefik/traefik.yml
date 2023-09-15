@@ -72,3 +72,8 @@ http:
         realm: "Moodmins service login"
         users: # example: `htpasswd -nB igor`
           - igor:$2y$05$j4IketELcP4gX1YNa2JWbe//YnMkinDkVTxxO7uyOO4F/2ow5SnaC
+
+accessLog:
+  filters:
+    statusCodes:
+      - "500-599"
