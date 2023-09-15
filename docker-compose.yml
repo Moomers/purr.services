@@ -77,7 +77,7 @@ services:
     labels:
       traefik.enable: true
       cluster.name: purr.services
-      traefik.http.routers.authentik.rule: Host(`auth.moomers.org`)
+      traefik.http.routers.authentik.rule: "Host(`auth.moomers.org`) || PathPrefix(`/outpost.goauthentik.io/`)"
       traefik.http.routers.authentik.tls: true
       traefik.http.routers.authentik.tls.certresolver: le
       traefik.http.routers.authentik.entrypoints: https
