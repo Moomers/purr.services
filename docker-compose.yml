@@ -1,5 +1,16 @@
 version: '3.9'
 
+networks:
+  default:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+          ip_range: 172.20.1.0/24
+          gateway: 172.20.1.1
+    driver_opts:
+      com.docker.network.bridge.name: "purrsrv"
+
 services:
   traefik.purr:
     image: traefik:v2.9
