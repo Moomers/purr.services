@@ -18,12 +18,12 @@ services:
     labels:
       traefik.enable: true
       cluster.name: purr.services
-      traefik.http.routers.api.rule: Host(`traefik.moomers.org`)
-      traefik.http.routers.api.service: api@internal
-      traefik.http.routers.api.middlewares: moodmins_auth@file
-      traefik.http.routers.api.tls: true
-      traefik.http.routers.api.tls.certresolver: le
-      traefik.http.routers.api.entrypoints: https
+      traefik.http.routers.traefik.rule: Host(`traefik.moomers.org`)
+      traefik.http.routers.traefik.service: api@internal
+      traefik.http.routers.traefik.middlewares: authentik@file
+      traefik.http.routers.traefik.tls: true
+      traefik.http.routers.traefik.tls.certresolver: le
+      traefik.http.routers.traefik.entrypoints: https
     ports:
       - "173.236.34.125:80:80"
       - "173.236.34.125:443:443"

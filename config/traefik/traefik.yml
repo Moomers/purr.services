@@ -67,12 +67,6 @@ http:
           - X-authentik-meta-app
           - X-authentik-meta-version
 
-    moodmins_auth: # the name of the auth middleware
-      basicAuth:
-        realm: "Moodmins service login"
-        users: # example: `htpasswd -nB igor`
-          - igor:$2y$05$j4IketELcP4gX1YNa2JWbe//YnMkinDkVTxxO7uyOO4F/2ow5SnaC
-
 accessLog:
   filters:
     statusCodes:
