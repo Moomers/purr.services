@@ -96,6 +96,7 @@ services:
     environment:
       AUTHENTIK_REDIS__HOST: redis.purr
       AUTHENTIK_POSTGRESQL__HOST: postgres.purr
+      AUTHENTIK_EMAIL__HOST: 172.20.1.1
       AUTHENTIK_EMAIL__FROM: "Moomers Auth <authentik@moomers.org>"
     volumes:
       - ${STORAGE}/authentik/media:/media
@@ -114,6 +115,7 @@ services:
     environment:
       AUTHENTIK_REDIS__HOST: redis.purr
       AUTHENTIK_POSTGRESQL__HOST: postgres.purr
+      AUTHENTIK_EMAIL__HOST: 172.20.1.1
       AUTHENTIK_EMAIL__FROM: "Moomers Auth <authentik@moomers.org>"
     # `user: root` and the docker socket volume are optional.
     # See more for the docker socket integration here:
