@@ -27,6 +27,7 @@ services:
     ports:
       - "173.236.34.125:80:80"
       - "173.236.34.125:443:443"
+      - "173.236.34.125:636:636"
     volumes:
       # So that Traefik can listen to the Docker events
       - /var/run/docker.sock:/var/run/docker.sock
@@ -134,6 +135,30 @@ services:
     depends_on:
       - postgres.purr
       - redis.purr
+
+  authentik.ldap:
+    image: ghcr.io/goauthentik/ldap
+    restart: unless-stopped
+    # we don't want to bind to host ports just yet, we will use traefik proxying
+    #ports:
+      #  - 389:3389
+      #  - 636:6636
+    environment:
+      AUTHENTIK_HOST: http://auth.moomers.org
+      AUTHENTIK_INSECURE: "false"
+    env_file:
+      - ${STORAGE}/authentik/ldap.env
+    depends_on:
+      - authentik
+    labels:
+      traefik.enable: true
+      cluster.name: purr.services
+      traefik.tcp.routers.ldap.rule: HostSNI(`*`)
+      traefik.tcp.routers.ldap.tls: true
+      traefik.tcp.routers.ldap.tls.certresolver: le
+      traefik.tcp.routers.ldap.tls.domains[0].main: ldap.moomers.org
+      traefik.tcp.routers.ldap.entrypoints: ldap
+      traefik.tcp.services.ldap.loadbalancer.server.port: 3389
 
   # whoami?
   whoami.purr:

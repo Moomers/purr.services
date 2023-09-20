@@ -23,6 +23,8 @@ entrypoints:
           scheme: https
   https:
     address: ":443"
+  ldap:
+    address: ":636"
 
 certificatesResolvers:
   le:
@@ -44,7 +46,7 @@ certificatesResolvers:
       storage: /acme/acme-cf.json
       dnsChallenge:
         provider: "cloudflare"
-    
+
 # http config
 http:
   middlewares:
