@@ -144,7 +144,7 @@ services:
       #  - 389:3389
       #  - 636:6636
     environment:
-      AUTHENTIK_HOST: http://auth.moomers.org
+      AUTHENTIK_HOST: https://auth.moomers.org
       AUTHENTIK_INSECURE: "false"
     env_file:
       - ${STORAGE}/authentik/ldap.env
