@@ -50,6 +50,13 @@ fi
 # grafana persistent store
 mkdir -p ${STORAGE}/grafana/data
 chown 472:472 ${STORAGE}/grafana/data
+if [ ! -f "${STORAGE}/grafana/env" ]
+then
+  echo "Please create ${STORAGE}/grafana/env with the following content:"
+  echo "GF_AUTH_GENERIC_OAUTH_CLIENT_ID=..."
+  echo "GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET=..."
+  exit 1
+fi
 
 # install the systemd unit file
 cp ${REPO}/compose.service /etc/systemd/system/

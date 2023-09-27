@@ -184,6 +184,8 @@ services:
     volumes:
       - ${STORAGE}/grafana/data:/var/lib/grafana
       - ${REPO}/config/grafana/grafana.ini:/etc/grafana/grafana.ini
+    env_file:
+      - ${STORAGE}/grafana/env
     labels:
       traefik.enable: true
       cluster.name: purr.services
