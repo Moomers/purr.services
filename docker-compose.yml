@@ -177,6 +177,23 @@ services:
       ## Middlewares
       traefik.http.routers.whoami.middlewares: authentik@file
 
+  # grafana
+  grafana.purr:
+    image: grafana/grafana-enterprise
+    restart: unless-stopped
+    volumes:
+      - ${STORAGE}/grafana/data:/var/lib/grafana
+      - ${REPO}/config/grafana/grafana.ini:/etc/grafana/grafana.ini
+    labels:
+      traefik.enable: true
+      cluster.name: purr.services
+      traefik.http.routers.grafana.rule: Host(`grafana.moomers.org`)
+      traefik.http.routers.grafana.tls: true
+      traefik.http.routers.grafana.tls.certresolver: le
+      traefik.http.routers.grafana.entrypoints: https
+      # not needed, it's the default exposed port so traefik picks is automatically
+      #traefik.http.services.grafana.loadbalancer.server.port: 3000
+
   # Watchtower upgrades services automatically
   watchtower.purr:
     restart: unless-stopped

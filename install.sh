@@ -47,6 +47,9 @@ then
   exit 1
 fi
 
+# grafana persistent store
+mkdir -p ${STORAGE}/grafana/data
+chown 472:472 ${STORAGE}/grafana/data
 
 # install the systemd unit file
 cp ${REPO}/compose.service /etc/systemd/system/
