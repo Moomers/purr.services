@@ -58,6 +58,10 @@ then
   exit 1
 fi
 
+# victoria metrics persistent store
+mkdir -p ${STORAGE}/victoria/data
+chown 1000:1000 ${STORAGE}/victoria/data
+
 # install the systemd unit file
 cp ${REPO}/compose.service /etc/systemd/system/
 systemctl daemon-reload
