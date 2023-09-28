@@ -219,6 +219,8 @@ services:
       traefik.http.routers.victoria.tls.certresolver: le
       traefik.http.routers.victoria.entrypoints: https
       traefik.http.services.victoria.loadbalancer.server.port: 8428
+      # auth through authentik; we exclude `/write` (in authentik) to allow telegraf
+      traefik.http.routers.victoria.middlewares: authentik@file
 
   # Watchtower upgrades services automatically
   watchtower.purr:
