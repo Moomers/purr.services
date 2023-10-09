@@ -164,8 +164,9 @@ services:
   whoami.purr:
     image: traefik/whoami
     restart: unless-stopped
-    security_opt:
-      - no-new-privileges:true
+    command:
+      - --port=3456
+      - --name="Who the Moomers are You?"
     labels:
       traefik.enable: true
       cluster.name: purr.services
@@ -173,7 +174,7 @@ services:
       traefik.http.routers.whoami.tls: true
       traefik.http.routers.whoami.tls.certresolver: le
       traefik.http.routers.whoami.entrypoints: https
-      traefik.http.services.whoami.loadbalancer.server.port: 80
+      traefik.http.services.whoami.loadbalancer.server.port: 3456
       ## Middlewares
       traefik.http.routers.whoami.middlewares: authentik@file
 
