@@ -107,7 +107,6 @@ services:
     depends_on:
       - postgres.purr
       - redis.purr
-      - authentik.worker
 
   authentik.worker:
     image: ghcr.io/goauthentik/server:2023.10
@@ -133,8 +132,7 @@ services:
     env_file:
       - ${STORAGE}/authentik/env
     depends_on:
-      - postgres.purr
-      - redis.purr
+      - authentik
 
   authentik.ldap:
     image: ghcr.io/goauthentik/ldap
