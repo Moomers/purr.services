@@ -83,7 +83,7 @@ services:
       - ${STORAGE}/authentik/env
 
   authentik:
-    image: ${AUTHENTIK_IMAGE:-ghcr.io/goauthentik/server}:${AUTHENTIK_TAG:-2023.8.3}
+    image: ghcr.io/goauthentik/server:2023.10
     restart: unless-stopped
     command: server
     labels:
@@ -110,7 +110,7 @@ services:
       - authentik.worker
 
   authentik.worker:
-    image: ${AUTHENTIK_IMAGE:-ghcr.io/goauthentik/server}:${AUTHENTIK_TAG:-2023.8.3}
+    image: ghcr.io/goauthentik/server:2023.10
     restart: unless-stopped
     command: worker
     environment:
