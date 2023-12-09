@@ -10,7 +10,7 @@
 # each option, go to docs/usage/configuration/config_documentation.md or
 # https://matrix-org.github.io/synapse/latest/usage/configuration/config_documentation.html
 
-registration_shared_secret: $SYNAPSE_REGISTRATION_SECRET
+registration_shared_secret: $SYNAPSE_REGISTRATION_SHARED_SECRET
 macaroon_secret_key: $SYNAPSE_MACAROON_SECRET_KEY
 form_secret: $SYNAPSE_FORM_SECRET
 
