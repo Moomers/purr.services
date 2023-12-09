@@ -256,8 +256,8 @@ services:
     volumes:
       - ${STORAGE}/synapse/data:/data
       - ${STORAGE}/synapse/config:/config
-      - ${REPO}/config/synapse/homeserver.yaml:/data/homeserver.yaml
-      - ${REPO}/config/synapse/log.yaml:/data/log.yaml
+      - ${REPO}/config/synapse/homeserver.yaml:/config/homeserver.yaml
+      - ${REPO}/config/synapse/log.yaml:/config/log.yaml
     labels:
       traefik.enable: true
       cluster.name: purr.services

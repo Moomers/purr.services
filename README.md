@@ -28,7 +28,7 @@ to create the postgres user/pw/db, run the init script:
 likewise for synapse:
 
 ```bash
-# docker compose exec postgres.purr /init_scripts/authentik_db.sh
+# docker compose exec postgres.purr /init_scripts/synapse_db.sh
 ```
 
 ## usage
