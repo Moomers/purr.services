@@ -1,1 +1,4 @@
 *.sw?
+
+secrets/key.private
+secrets/secrets.yaml

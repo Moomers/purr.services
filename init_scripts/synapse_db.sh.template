@@ -1,0 +1,17 @@
+#!/bin/bash
+set -e
+
+psql="psql -v ON_ERROR_STOP=1 --username $POSTGRES_USER --dbname postgres"
+
+# we might need to create role and DB
+exists=`$psql -tAc "SELECT 1 FROM pg_roles WHERE rolname='$SYNAPSE_POSTGRES_USER'"`
+if [ "$exists" != "1" ]; then
+  $psql -tAc "CREATE ROLE $SYNAPSE_POSTGRES_USER WITH LOGIN;"
+  $psql -tAc "CREATE DATABASE $SYNAPSE_POSTGRES_DB WITH OWNER $SYNAPSE_POSTGRES_USER;"
+  $psql -tAc "GRANT ALL PRIVILEGES ON DATABASE $SYNAPSE_POSTGRES_DB TO $SYNAPSE_POSTGRES_USER;"
+fi
+
+# support password changes
+$psql -tac "ALTER USER $SYNAPSE_POSTGRES_USER WITH PASSWORD '$SYNAPSE_POSTGRES_PASS';"
+
+# vim:ft=bash

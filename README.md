@@ -17,9 +17,15 @@ $ cd ~/repos/compose.services
 $ ./install.sh
 ```
 
-### authentik
+## db setup
 
 to create the postgres user/pw/db, run the init script:
+
+```bash
+# docker compose exec postgres.purr /init_scripts/authentik_db.sh
+```
+
+likewise for synapse:
 
 ```bash
 # docker compose exec postgres.purr /init_scripts/authentik_db.sh

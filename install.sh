@@ -62,6 +62,18 @@ fi
 mkdir -p ${STORAGE}/victoria/data
 chown 1000:1000 ${STORAGE}/victoria/data
 
+# synapse
+mkdir -p ${STORAGE}/synapse/data/media_store
+mkdir -p ${STORAGE}/synapse/config
+if [ ! -f "${STORAGE}/synapse/config/synapse.moomers.org.signing.key" ]
+then
+  docker run -it --rm \
+    -v ${STORAGE}/synapse/config:/config \
+    matrixdotorg/synapse:latest \
+    generate_signing_key.py \
+    -o /config/synapse.moomers.org.signing.key
+fi
+
 # install the systemd unit file
 cp ${REPO}/compose.service /etc/systemd/system/
 systemctl daemon-reload
