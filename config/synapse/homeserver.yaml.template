@@ -15,7 +15,7 @@ macaroon_secret_key: $SYNAPSE_MACAROON_SECRET_KEY
 form_secret: $SYNAPSE_FORM_SECRET
 
 server_name: "synapse.moomers.org"
-log_config: "/config/log.yaml"
+log_config: "/data/log.yaml"
 signing_key_path: "/config/synapse.moomers.org.signing.key"
 media_store_path: /data/media_store
 
