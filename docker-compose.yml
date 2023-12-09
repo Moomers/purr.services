@@ -261,7 +261,7 @@ services:
     labels:
       traefik.enable: true
       cluster.name: purr.services
-      traefik.http.routers.synapse.rule: Host(`matrix.moomers.org`)
+      traefik.http.routers.synapse.rule: Host(`synapse.moomers.org`)
       traefik.http.routers.synapse.tls: true
       traefik.http.routers.synapse.tls.certresolver: le
       traefik.http.routers.synapse.entrypoints: https
