@@ -39,7 +39,7 @@ database:
   txn_limit: 10000
   args:
     user: $SYNAPSE_POSTGRES_USER
-    password: $SYNAPSE_POSTGRES_PASSWORD
+    password: $SYNAPSE_POSTGRES_PASS
     database: $SYNAPSE_POSTGRES_DB
     host: postgres.purr
     port: 5432
