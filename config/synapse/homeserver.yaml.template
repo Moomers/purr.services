@@ -27,7 +27,7 @@ oidc_providers:
   - idp_id: authentik
     idp_name: authentik
     discover: true
-    issuer: "https://auth.moomers.org.org/application/o/matrix/"
+    issuer: "https://auth.moomers.org/application/o/matrix/"
     client_id: "$SYNAPSE_OATH_CLIENT_ID"
     client_secret: "$SYNAPSE_OATH_CLIENT_SECRET"
     scopes:
