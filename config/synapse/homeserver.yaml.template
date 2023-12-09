@@ -19,10 +19,6 @@ log_config: "/data/log.yaml"
 signing_key_path: "/config/synapse.moomers.org.signing.key"
 media_store_path: /data/media_store
 
-enable_registration: true
-registrations_require_3pid:
-  - email
-
 oidc_providers:
   - idp_id: authentik
     idp_name: authentik
