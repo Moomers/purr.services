@@ -103,8 +103,8 @@ services:
     image: ghcr.io/goauthentik/server:2023.10
     restart: unless-stopped
     depends_on:
-      dcsm.purr:
-        condition: service_completed_successfully
+      authentik.worker:
+        condition: service_healthy
     command: server
     labels:
       traefik.enable: true
@@ -124,14 +124,15 @@ services:
       - ${STORAGE}/authentik/templates:/templates
     env_file:
       - ${STORAGE}/authentik/env
-    depends_on:
-      - postgres.purr
-      - redis.purr
 
   authentik.worker:
     image: ghcr.io/goauthentik/server:2023.10
     restart: unless-stopped
     depends_on:
+      postgres.purr:
+        condition: service_healthy
+      redis.purr:
+        condition: service_healthy
       dcsm.purr:
         condition: service_completed_successfully
     command: worker
@@ -154,8 +155,6 @@ services:
       #- /var/run/docker.sock:/var/run/docker.sock
     env_file:
       - ${STORAGE}/authentik/env
-    depends_on:
-      - authentik
 
   authentik.ldap:
     image: ghcr.io/goauthentik/ldap
