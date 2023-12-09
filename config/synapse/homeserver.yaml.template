@@ -19,6 +19,24 @@ log_config: "/data/log.yaml"
 signing_key_path: "/config/synapse.moomers.org.signing.key"
 media_store_path: /data/media_store
 
+enable_registration: true
+
+oidc_providers:
+  - idp_id: authentik
+    idp_name: authentik
+    discover: true
+    issuer: "https://auth.moomers.org.org/application/o/matrix/"
+    client_id: "$SYNAPSE_OATH_CLIENT_ID"
+    client_secret: "$SYNAPSE_OATH_CLIENT_SECRET"
+    scopes:
+      - "openid"
+      - "profile"
+      - "email"
+    user_mapping_provider:
+      config:
+        localpart_template: "{{ user.preferred_username }}"
+        display_name_template: "{{ user.name|capitalize }}"
+
 listeners:
   - port: 8008
     tls: false
