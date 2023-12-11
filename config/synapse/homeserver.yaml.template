@@ -14,7 +14,15 @@ registration_shared_secret: $SYNAPSE_REGISTRATION_SHARED_SECRET
 macaroon_secret_key: $SYNAPSE_MACAROON_SECRET_KEY
 form_secret: $SYNAPSE_FORM_SECRET
 
-server_name: "synapse.moomers.org"
+# we require a `.well-known` file for federation, this is created manually
+# at: https://moomers.org/.well-known/matrix/server
+# contents: 
+# {
+#    "m.server": "synapse.example.com:443"
+# }
+server_name: "moomers.org"
+public_baseurl: "https://synapse.moomers.org"
+
 log_config: "/data/log.yaml"
 signing_key_path: "/config/synapse.moomers.org.signing.key"
 media_store_path: /data/media_store
