@@ -12,9 +12,25 @@ networks:
       com.docker.network.bridge.name: "purrsrv"
 
 services:
+  dcsm.purr:
+    image: ghcr.io/igor47/dcsm:v0.2.0
+    environment:
+      - DCSM_KEYFILE=/secrets/key.private
+      - DCSM_SECRETS_FILE=/secrets/secrets.encrypted
+      - DCSM_SOURCE_FILE=/secrets/secrets.yaml
+      - DCSM_TEMPLATE_DIR=/config
+      - DCSM_TEMPLATE_DIR2=/init_scripts
+    volumes:
+      - ./secrets:/secrets
+      - ./config:/config
+      - ./init_scripts:/init_scripts
+
   traefik.purr:
     image: traefik:v2.9
     restart: unless-stopped
+    depends_on:
+      dcsm.purr:
+        condition: service_completed_successfully
     labels:
       traefik.enable: true
       cluster.name: purr.services
@@ -31,10 +47,10 @@ services:
     volumes:
       # So that Traefik can listen to the Docker events
       - /var/run/docker.sock:/var/run/docker.sock
-      - ${REPO}/config/traefik:/etc/traefik
+      - ./config/traefik:/etc/traefik
       - ${STORAGE}/traefik/acme:/acme
     env_file:
-      - ${STORAGE}/traefik/cloudflare.env
+      - ./config/traefik/cloudflare.env
 
   # mmrs.link link shortening service
   mmrs.link:
@@ -65,18 +81,6 @@ services:
     volumes:
       - ${STORAGE}/redis/data:/data
 
-  dcsm.purr:
-    image: ghcr.io/igor47/dcsm:latest
-    environment:
-      - DCSM_KEYFILE=/secrets/key.private
-      - DCSM_SECRET_FILE=/secrets/secrets.encrypted
-      - DCSM_TEMPLATE_DIR=/config
-      - DCSM_TEMPLATE_DIR2=/init_scripts
-    volumes:
-      - ${REPO}/secrets:/secrets
-      - ${REPO}/config:/config
-      - ${REPO}/init_scripts:/init_scripts
-
   postgres.purr:
     image: docker.io/library/postgres:12-alpine
     restart: unless-stopped
@@ -91,13 +95,9 @@ services:
       timeout: 5s
     volumes:
       - ${STORAGE}/postgres/data:/var/lib/postgresql/data
-      - ${REPO}/init_scripts:/init_scripts
-      # we give it synapse creds so we can run init_scripts/synapse_db.sh
-      - ${STORAGE}/synapse/config/secrets.yaml:/init_scripts/
+      - ./init_scripts:/init_scripts
     env_file:
-      - ${STORAGE}/postgres/env
-      # we give it authentik creds so we can run init_scripts/authentik_db.sh
-      - ${STORAGE}/authentik/env
+      - ./config/postgres/default_creds.env
 
   authentik:
     image: ghcr.io/goauthentik/server:2023.10
@@ -123,7 +123,7 @@ services:
       - ${STORAGE}/authentik/media:/media
       - ${STORAGE}/authentik/templates:/templates
     env_file:
-      - ${STORAGE}/authentik/env
+      - ./config/authentik/creds.env
 
   authentik.worker:
     image: ghcr.io/goauthentik/server:2023.10
@@ -154,11 +154,16 @@ services:
       - ${STORAGE}/authentik/certs:/certs
       #- /var/run/docker.sock:/var/run/docker.sock
     env_file:
-      - ${STORAGE}/authentik/env
+      - ./config/authentik/creds.env
 
   authentik.ldap:
     image: ghcr.io/goauthentik/ldap
     restart: unless-stopped
+    depends_on:
+      dcsm.purr:
+        condition: service_completed_successfully
+      authentik:
+        condition: service_healthy
     # we don't want to bind to host ports just yet, we will use traefik proxying
     #ports:
       #  - 389:3389
@@ -167,9 +172,7 @@ services:
       AUTHENTIK_HOST: https://auth.moomers.org
       AUTHENTIK_INSECURE: "false"
     env_file:
-      - ${STORAGE}/authentik/ldap.env
-    depends_on:
-      - authentik
+      - ./config/authentik/ldap.env
     labels:
       traefik.enable: true
       cluster.name: purr.services
@@ -203,12 +206,15 @@ services:
     image: grafana/grafana-enterprise
     restart: unless-stopped
     depends_on:
-      - victoria.purr
+      dcsm.purr:
+        condition: service_completed_successfully
+      victoria.purr:
+        condition: service_healthy
     volumes:
       - ${STORAGE}/grafana/data:/var/lib/grafana
-      - ${REPO}/config/grafana/grafana.ini:/etc/grafana/grafana.ini
+      - ./config/grafana/grafana.ini:/etc/grafana/grafana.ini
     env_file:
-      - ${STORAGE}/grafana/env
+      - ./config/grafana/oauth_creds.env
     labels:
       traefik.enable: true
       cluster.name: purr.services
@@ -256,8 +262,8 @@ services:
     volumes:
       - ${STORAGE}/synapse/data:/data
       - ${STORAGE}/synapse/config:/config
-      - ${REPO}/config/synapse/homeserver.yaml:/data/homeserver.yaml
-      - ${REPO}/config/synapse/log.yaml:/data/log.yaml
+      - ./config/synapse/homeserver.yaml:/data/homeserver.yaml
+      - ./config/synapse/log.yaml:/data/log.yaml
     labels:
       traefik.enable: true
       cluster.name: purr.services
