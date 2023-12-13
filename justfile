@@ -1,5 +1,5 @@
 set positional-arguments
-STORAGE := "{{justfile_directory()}}/storage"
+STORAGE := justfile_directory() / "storage"
 
 # list the available recipes
 list:
@@ -22,8 +22,8 @@ reload:
   docker compose up --wait --detach --remove-orphans
 
 # restart the specified service
-restart:
-  docker compose restart
+restart service:
+  docker compose restart {{service}}
 
 # log output from all (or specified) service
 logs service="":
@@ -38,6 +38,8 @@ postgres-init: dcsm
 mkdirs:
   #!/usr/bin/env bash
   set -euo pipefail
+  #
+  echo storage is {{STORAGE}}
   #
   # make sure the storage symlink is valid
   if [ -L {{STORAGE}} ];
