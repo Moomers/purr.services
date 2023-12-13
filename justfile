@@ -29,6 +29,11 @@ restart:
 logs service="":
   docker compose logs --follow --tail 100 {{service}}
 
+# initialize postgres databases
+postgres-init: dcsm
+  docker exec -it postgres.purr /init_scripts/authentik_db.sh
+  docker exec -it postgres.purr /init_scripts/synapse_db.sh
+
 # make the directory structure for the storage volumes
 mkdirs:
   #!/usr/bin/env bash
