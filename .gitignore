@@ -2,3 +2,6 @@
 
 secrets/key.private
 secrets/secrets.yaml
+
+# storage dir should be a symlink
+storage
