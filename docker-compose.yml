@@ -13,7 +13,7 @@ networks:
 
 services:
   dcsm.purr:
-    image: ghcr.io/igor47/dcsm:v0.2.0
+    image: ghcr.io/igor47/dcsm:v0.3.0
     environment:
       - DCSM_KEYFILE=/secrets/key.private
       - DCSM_SECRETS_FILE=/secrets/secrets.encrypted
