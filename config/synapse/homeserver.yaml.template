@@ -10,9 +10,9 @@
 # each option, go to docs/usage/configuration/config_documentation.md or
 # https://matrix-org.github.io/synapse/latest/usage/configuration/config_documentation.html
 
-registration_shared_secret: $SYNAPSE_REGISTRATION_SHARED_SECRET
-macaroon_secret_key: $SYNAPSE_MACAROON_SECRET_KEY
-form_secret: $SYNAPSE_FORM_SECRET
+registration_shared_secret: $DCSM{SYNAPSE_REGISTRATION_SHARED_SECRET}
+macaroon_secret_key: $DCSM{SYNAPSE_MACAROON_SECRET_KEY}
+form_secret: $DCSM{SYNAPSE_FORM_SECRET}
 
 # we require a `.well-known` file for federation, this is created manually
 # at: https://moomers.org/.well-known/matrix/server
@@ -32,8 +32,8 @@ oidc_providers:
     idp_name: authentik
     discover: true
     issuer: "https://auth.moomers.org/application/o/matrix/"
-    client_id: "$SYNAPSE_OATH_CLIENT_ID"
-    client_secret: "$SYNAPSE_OATH_CLIENT_SECRET"
+    client_id: "$DCSM{SYNAPSE_OATH_CLIENT_ID}"
+    client_secret: "$DCSM{SYNAPSE_OATH_CLIENT_SECRET}"
     scopes:
       - "openid"
       - "profile"
@@ -62,9 +62,9 @@ database:
   name: psycopg2
   txn_limit: 10000
   args:
-    user: $SYNAPSE_POSTGRES_USER
-    password: $SYNAPSE_POSTGRES_PASS
-    database: $SYNAPSE_POSTGRES_DB
+    user: $DCSM{SYNAPSE_POSTGRES_USER}
+    password: $DCSM{SYNAPSE_POSTGRES_PASS}
+    database: $DCSM{SYNAPSE_POSTGRES_DB}
     host: postgres.purr
     port: 5432
     cp_min: 5
