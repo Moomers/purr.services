@@ -209,7 +209,7 @@ services:
       dcsm.purr:
         condition: service_completed_successfully
       victoria.purr:
-        condition: service_healthy
+        condition: service_started
     volumes:
       - ./storage/grafana/data:/var/lib/grafana
       - ./config/grafana/grafana.ini:/etc/grafana/grafana.ini
