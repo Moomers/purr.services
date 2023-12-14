@@ -72,6 +72,9 @@ mkdirs:
   # synapse
   mkdir -p {{STORAGE}}/synapse/data/media_store
   mkdir -p {{STORAGE}}/synapse/config
+  # mailman-web
+  mkdir -p {{STORAGE}}/mailman.web/data
+  chown -R 100:101 {{STORAGE}}/mailman.web/data
 
 # install the systemd service
 install: mkdirs

@@ -271,3 +271,27 @@ services:
       traefik.http.routers.synapse.tls: true
       traefik.http.routers.synapse.tls.certresolver: le
       traefik.http.routers.synapse.entrypoints: https
+
+  # mailman web
+  mailman.web:
+    image: maxking/mailman-web:0.4 # Use a specific version tag (tag latest is not published)
+    restart: unless-stopped
+    depends_on:
+      dcsm.purr:
+        condition: service_completed_successfully
+    volumes:
+      - ./config/mailman.web/settings-local.py:/opt/mailman-web-data/settings_local.py
+      - ./storage/mailman.web/data:/data
+    environment:
+      - SECRET_KEY=fakeSecretKey  # not used; just here to satisfy entrypoint script
+    # use a static IP because mailman needs to hit it for postorious templates
+    networks:
+      default:
+        ipv4_address: 172.20.1.130
+    labels:
+      traefik.enable: true
+      cluster.name: purr.services
+      traefik.http.routers.lists.rule: Host(`lists.moomers.org`)
+      traefik.http.routers.lists.tls: true
+      traefik.http.routers.lists.tls.certresolver: le
+      traefik.http.routers.lists.entrypoints: https
