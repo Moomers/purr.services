@@ -301,3 +301,24 @@ services:
       traefik.http.routers.lists.tls: true
       traefik.http.routers.lists.tls.certresolver: le
       traefik.http.routers.lists.entrypoints: https
+
+  # synapse -- matrix home server
+  tandoor.purr:
+    image: vabene1111/recipes:latest
+    restart: unless-stopped
+    depends_on:
+      dcsm.purr:
+        condition: service_completed_successfully
+    env_file:
+      - ./config/tandoor/env
+    volumes:
+      - ./storage/tandoor/static:/opt/recipes/staticfiles
+      - ./storage/tandoor/media:/opt/recipes/mediafiles
+    labels:
+      traefik.enable: true
+      cluster.name: purr.services
+      traefik.http.routers.tandoor.rule: Host(`recipes.moomers.org`)
+      traefik.http.routers.tandoor.tls: true
+      traefik.http.routers.tandoor.tls.certresolver: le
+      traefik.http.routers.tandoor.entrypoints: https
+

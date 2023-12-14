@@ -33,6 +33,7 @@ logs service="":
 postgres-init: dcsm
   docker compose exec -it postgres.purr /init_scripts/authentik_db.sh
   docker compose exec -it postgres.purr /init_scripts/synapse_db.sh
+  docker compose exec -it postgres.purr /init_scripts/tandoor.sh
 
 # make the directory structure for the storage volumes
 mkdirs:
@@ -75,6 +76,9 @@ mkdirs:
   # mailman-web
   mkdir -p {{STORAGE}}/mailman.web/data
   chown -R 100:101 {{STORAGE}}/mailman.web/data
+  # tandoor
+  mkdir -p {{STORAGE}}/tandoor/media
+  mkdir -p {{STORAGE}}/tandoor/static
 
 firewall:
   # mailman-web to local mailman on the host
