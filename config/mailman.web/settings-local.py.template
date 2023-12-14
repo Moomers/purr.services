@@ -8,8 +8,6 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.8/ref/settings/
 """
 
-from typing import List
-
 # this file modifies the default settings from here:
 # https://github.com/maxking/docker-mailman/blob/main/web/mailman-web/settings.py
 
@@ -31,15 +29,6 @@ MAILMAN_REST_API_USER = 'restadmin'
 MAILMAN_REST_API_PASS = '$DCSM{MAILMAN_REST_API_PASS}'
 MAILMAN_ARCHIVER_KEY = '$DCSM{MAILMAN_ARCHIVER_KEY}'  # AKA HYPERKITTY_API_KEY
 MAILMAN_ARCHIVER_FROM = ('*')
-
-# this gets merged into INSTALLED_APPS
-MAILMAN_WEB_SOCIAL_AUTH: List[str] = [
-    #'django_mailman3.lib.auth.fedora',
-    #'allauth.socialaccount.providers.openid',
-    #'allauth.socialaccount.providers.github',
-    #'allauth.socialaccount.providers.gitlab',
-    #'allauth.socialaccount.providers.google',
-]
 
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
@@ -85,6 +74,12 @@ EMAIL_HOST = '172.20.1.1'
 #
 # WILL MESS WITH THIS FOR SSO
 #
+# this gets merged into INSTALLED_APPS
+MAILMAN_WEB_SOCIAL_AUTH = [
+    'allauth.socialaccount.providers.openid_connect',
+]
+
+
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
@@ -98,47 +93,30 @@ ACCOUNT_DEFAULT_HTTP_PROTOCOL = "https"
 ACCOUNT_UNIQUE_EMAIL  = True
 
 SOCIALACCOUNT_PROVIDERS = {
-    # 'openid_connect': {
-    #     'APPS': [
-    #         {
-    #             "provider_id": "moomers-auth",
-    #             "name": "Moomers",
-    #             "client_id": "your.service.id",
-    #             "secret": "your.service.secret",
-    #             "settings": {
-    #                 "server_url": "https://auth.moomers.org",
-    #                 # Optional token endpoint authentication method.
-    #                 # May be one of "client_secret_basic", "client_secret_post"
-    #                 # If omitted, a method from the the server's
-    #                 # token auth methods list is used
-    #                 "token_auth_method": "client_secret_basic",
-    #             },
-    #         },
-    #     ],
-    # },
-    'openid': {
-        'SERVERS': [
-            dict(id='yahoo',
-                 name='Yahoo',
-                 openid_url='http://me.yahoo.com'),
+    'openid_connect': {
+        "APPS": [
+            {
+                "provider_id": "moomers",
+                "name": "Moomers Auth",
+                "client_id": "$DCSM{MAILMAN_OAUTH_CLIENT_ID}",
+                "secret": "$DCSM{MAILMAN_OAUTH_CLIENT_SECRET}",
+                "settings": {
+                    "server_url": "https://auth.moomers.org/application/o/mailman/.well-known/openid-configuration",
+                }
+            }
         ],
-    },
-    'google': {
-        'SCOPE': ['profile', 'email'],
-        'AUTH_PARAMS': {'access_type': 'online'},
-    },
-    'facebook': {
-       'METHOD': 'oauth2',
-       'SCOPE': ['email'],
-       'FIELDS': [
-           'email',
-           'name',
-           'first_name',
-           'last_name',
-           'locale',
-           'timezone',
-           ],
-       'VERSION': 'v2.4',
+        #"SERVERS": [
+        #    {
+        #        "id": "moomers",
+        #        "name": "Moomers Auth",
+        #        "server_url": "https://auth.moomers.org/application/o/mailman/.well-known/openid-configuration",
+        #        "token_auth_method": "client_secret_basic",
+        #        "APP": {
+        #            "client_id": "$DCSM{MAILMAN_OAUTH_CLIENT_ID}",
+        #            "secret": "DCSM{MAILMAN_OAUTH_CLIENT_SECRET}",
+        #        }
+        #    }
+        #]
     },
 }
 
