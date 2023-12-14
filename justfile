@@ -76,6 +76,10 @@ mkdirs:
   mkdir -p {{STORAGE}}/mailman.web/data
   chown -R 100:101 {{STORAGE}}/mailman.web/data
 
+firewall:
+  # mailman-web to local mailman on the host
+  ufw allow from 172.20.0.0/16 to 172.20.1.1 port 8001 proto tcp
+
 # install the systemd service
 install: mkdirs
   cp {{justfile_directory()}}/compose.service /etc/systemd/system/

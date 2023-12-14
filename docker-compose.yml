@@ -285,6 +285,7 @@ services:
       - ./config/mailman.web/settings-local.py:/opt/mailman-web-data/settings_local.py
     environment:
       - LOG_TO_CONSOLE=yes
+      - UWSGI_STATIC_MAP=/static=/opt/mailman-web-data/static
       # these are kere to satisfy the entrypoint script
       - SECRET_KEY=fakeSecretKey
       - MAILMAN_HOST_IP=172.20.1.1  # to avoid failure in `settings.py`; overridden by `settings_local.py`

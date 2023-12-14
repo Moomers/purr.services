@@ -29,7 +29,7 @@ ALLOWED_HOSTS = [
 MAILMAN_REST_API_URL = 'http://172.20.1.1:8001'
 MAILMAN_REST_API_USER = 'restadmin'
 MAILMAN_REST_API_PASS = '$DCSM{MAILMAN_REST_API_PASS}'
-MAILMAN_ARCHIVER_KEY = '$DCSM{MAILMAN_ARCHIVER_KEY}'
+MAILMAN_ARCHIVER_KEY = '$DCSM{MAILMAN_ARCHIVER_KEY}'  # AKA HYPERKITTY_API_KEY
 MAILMAN_ARCHIVER_FROM = ('*')
 
 # this gets merged into INSTALLED_APPS
@@ -139,6 +139,14 @@ SOCIALACCOUNT_PROVIDERS = {
            'timezone',
            ],
        'VERSION': 'v2.4',
+    },
+}
+
+# xapian for full text search
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'xapian_backend.XapianEngine',
+        'PATH': "/opt/mailman-web-data/fulltext_index",
     },
 }
 
