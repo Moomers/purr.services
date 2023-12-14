@@ -8,10 +8,12 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.8/ref/settings/
 """
 
+from typing import List
+
 # this file modifies the default settings from here:
 # https://github.com/maxking/docker-mailman/blob/main/web/mailman-web/settings.py
 
-SECRET_KEY = $DCSM{MAILMAN_WEB_SECRET_KEY}
+SECRET_KEY = '$DCSM{MAILMAN_WEB_SECRET_KEY}'
 ADMINS = (
      ('Mailman Suite Admin', 'igor47@moomers.org'),
 )
@@ -26,12 +28,12 @@ ALLOWED_HOSTS = [
 # Mailman API credentials
 MAILMAN_REST_API_URL = 'http://172.20.1.1:8001'
 MAILMAN_REST_API_USER = 'restadmin'
-MAILMAN_REST_API_PASS = $DCSM{MAILMAN_REST_API_PASS}
-MAILMAN_ARCHIVER_KEY = $DCSM{MAILMAN_ARCHIVER_KEY}
+MAILMAN_REST_API_PASS = '$DCSM{MAILMAN_REST_API_PASS}'
+MAILMAN_ARCHIVER_KEY = '$DCSM{MAILMAN_ARCHIVER_KEY}'
 MAILMAN_ARCHIVER_FROM = ('*')
 
 # this gets merged into INSTALLED_APPS
-MAILMAN_WEB_SOCIAL_AUTH = [
+MAILMAN_WEB_SOCIAL_AUTH: List[str] = [
     #'django_mailman3.lib.auth.fedora',
     #'allauth.socialaccount.providers.openid',
     #'allauth.socialaccount.providers.github',
@@ -154,7 +156,7 @@ LOGGING['loggers']['django.request']['handlers'].append('console')
 COMPRESS_OFFLINE = True
 
 # use our static ip from docker-compose
-POSTORIUS_TEMPLATE_BASE_URL = 'http://172.20.1.130:8000')
+POSTORIUS_TEMPLATE_BASE_URL = 'http://172.20.1.130:8000'
 
 DISKCACHE_PATH = '/data/diskcache'
 
