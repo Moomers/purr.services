@@ -281,10 +281,9 @@ services:
       dcsm.purr:
         condition: service_completed_successfully
     volumes:
+      - ./storage/mailman.web/data:/opt/mailman-web-data
       - ./config/mailman.web/settings-local.py:/opt/mailman-web-data/settings_local.py
-      - ./storage/mailman.web/data:/data
     environment:
-      - DJANGO_LOG_URL=/data/mailman-web.log
       - LOG_TO_CONSOLE=yes
       # these are kere to satisfy the entrypoint script
       - SECRET_KEY=fakeSecretKey

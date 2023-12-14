@@ -47,7 +47,7 @@ MAILMAN_WEB_SOCIAL_AUTH: List[str] = [
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': '/data/mailman3web.db',
+        'NAME': '/opt/mailman-web-data/mailman3web.db',
         # The following settings are not used with sqlite3:
         'USER': '',
         'PASSWORD': '',
@@ -147,7 +147,5 @@ COMPRESS_OFFLINE = True
 
 # use our static ip from docker-compose
 POSTORIUS_TEMPLATE_BASE_URL = 'http://172.20.1.130:8000'
-
-DISKCACHE_PATH = '/data/diskcache'
 
 # vim:ft=python
