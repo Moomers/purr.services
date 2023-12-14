@@ -82,12 +82,6 @@ EMAIL_HOST = '172.20.1.1'
 #EMAIL_USE_TLS = os.environ.get('SMTP_USE_TLS', False)
 #EMAIL_USE_SSL = os.environ.get('SMTP_USE_SSL', False)
 
-# Compatibility with Bootstrap 3
-from django.contrib.messages import constants as messages  # flake8: noqa
-MESSAGE_TAGS = {
-    messages.ERROR: 'danger'
-}
-
 #
 # WILL MESS WITH THIS FOR SSO
 #
@@ -147,10 +141,6 @@ SOCIALACCOUNT_PROVIDERS = {
        'VERSION': 'v2.4',
     },
 }
-
-LOGGING['handlers']['file']['filename'] = '/data/mailman-web.log'
-LOGGING['loggers']['django']['handlers'].append('console')
-LOGGING['loggers']['django.request']['handlers'].append('console')
 
 # we do compress offline as part of the entrypoint script
 COMPRESS_OFFLINE = True
