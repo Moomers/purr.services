@@ -325,6 +325,7 @@ services:
   portainer.purr:
     image: portainer/portainer-ce:latest
     restart: unless-stopped
+    command: "--http-enabled"
     volumes:
       - ./storage/portainer/data:/data
       # So that it can monitor containers
@@ -338,6 +339,6 @@ services:
       traefik.http.routers.ptweb.tls.certresolver: le
       traefik.http.routers.ptweb.entrypoints: https
       traefik.http.routers.ptweb.service: ptweb
-      traefik.http.services.ptweb.loadbalancer.server.port: 9443
+      traefik.http.services.ptweb.loadbalancer.server.port: 9000
       # Edge is on port 8000 and is also just an http port
       #traefik.http.routers.ptedge.rule: Host(`ptedge.portainer.moomers.org`)
