@@ -342,3 +342,56 @@ services:
       traefik.http.services.ptweb.loadbalancer.server.port: 9000
       # Edge is on port 8000 and is also just an http port
       #traefik.http.routers.ptedge.rule: Host(`ptedge.portainer.moomers.org`)
+  
+  immich.db:
+    image: tensorchord/pgvecto-rs:pg14-v0.1.13
+    env_file:
+      - ./config/immich/db.env
+    volumes:
+      - ./storge/immich/db/data:/var/lib/postgresql/data
+    restart: always
+
+  immich.server:
+    container_name: immich_server
+    image: ghcr.io/immich-app/immich-server:release
+    restart: always
+    command: [ "start.sh", "immich" ]
+    volumes:
+      - ./storage/immich/uploads:/usr/src/app/upload
+    env_file:
+      - ./config/immich/config.env
+    depends_on:
+      - immich.db
+      - redis.purr
+    labels:
+      # Frontend
+      traefik.enable: true
+      cluster.name: purr.services
+      traefik.http.routers.immich.rule: Host(`photos.moomers.org`)
+      traefik.http.routers.immich.tls: true
+      traefik.http.routers.immich.tls.certresolver: le
+      traefik.http.routers.immich.entrypoints: https
+      traefik.http.routers.immich.service: ptweb
+
+  immich.micro:
+    container_name: immich_microservices
+    image: ghcr.io/immich-app/immich-server:${IMMICH_VERSION:-release}
+    restart: always
+    command: [ "start.sh", "microservices" ]
+    # extends:
+    #   file: hwaccel.yml
+    #   service: hwaccel
+    volumes:
+      - ./storage/immich/uploads:/usr/src/app/upload
+    env_file:
+      - ./config/immich/config.env
+    depends_on:
+      - immich.db
+      - redis.purr
+
+  immich.ml:
+    container_name: immich_machine_learning
+    image: ghcr.io/immich-app/immich-machine-learning:release
+    restart: always
+    volumes:
+      - ./storage/immich/ml/cache:/cache
