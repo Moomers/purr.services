@@ -346,7 +346,7 @@ services:
       #traefik.http.routers.ptedge.rule: Host(`ptedge.portainer.moomers.org`)
   
   immich.db:
-    image: tensorchord/pgvecto-rs:pg14-v0.1.13
+    image: tensorchord/pgvecto-rs:pg14-v0.1.11
     restart: unless-stopped
     depends_on:
       dcsm.purr:
