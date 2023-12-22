@@ -309,6 +309,8 @@ services:
     depends_on:
       dcsm.purr:
         condition: service_completed_successfully
+      postgres.purr:
+        condition: service_healthy
     env_file:
       - ./config/tandoor/env
     volumes:
@@ -345,24 +347,37 @@ services:
   
   immich.db:
     image: tensorchord/pgvecto-rs:pg14-v0.1.13
+    restart: unless-stopped
+    depends_on:
+      dcsm.purr:
+        condition: service_completed_successfully
     env_file:
       - ./config/immich/db.env
     volumes:
-      - ./storge/immich/db/data:/var/lib/postgresql/data
-    restart: always
+      - ./storage/immich/db/data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}"]
+      start_period: 20s
+      interval: 30s
+      retries: 5
+      timeout: 5s
 
   immich.server:
     container_name: immich_server
     image: ghcr.io/immich-app/immich-server:release
-    restart: always
+    restart: unless-stopped
     command: [ "start.sh", "immich" ]
-    volumes:
-      - ./storage/immich/uploads:/usr/src/app/upload
+    depends_on:
+      immich.db:
+        condition: service_healthy
+      redis.purr:
+        condition: service_healthy
+      dcsm.purr:
+        condition: service_completed_successfully
     env_file:
       - ./config/immich/config.env
-    depends_on:
-      - immich.db
-      - redis.purr
+    volumes:
+      - ./storage/immich/uploads:/usr/src/app/upload
     labels:
       # Frontend
       traefik.enable: true
@@ -371,27 +386,30 @@ services:
       traefik.http.routers.immich.tls: true
       traefik.http.routers.immich.tls.certresolver: le
       traefik.http.routers.immich.entrypoints: https
-      traefik.http.routers.immich.service: ptweb
 
   immich.micro:
     container_name: immich_microservices
     image: ghcr.io/immich-app/immich-server:${IMMICH_VERSION:-release}
-    restart: always
+    restart: unless-stopped
     command: [ "start.sh", "microservices" ]
+    depends_on:
+      immich.db:
+        condition: service_healthy
+      redis.purr:
+        condition: service_healthy
+      dcsm.purr:
+        condition: service_completed_successfully
     # extends:
     #   file: hwaccel.yml
     #   service: hwaccel
-    volumes:
-      - ./storage/immich/uploads:/usr/src/app/upload
     env_file:
       - ./config/immich/config.env
-    depends_on:
-      - immich.db
-      - redis.purr
+    volumes:
+      - ./storage/immich/uploads:/usr/src/app/upload
 
   immich.ml:
     container_name: immich_machine_learning
     image: ghcr.io/immich-app/immich-machine-learning:release
-    restart: always
+    restart: unless-stopped
     volumes:
       - ./storage/immich/ml/cache:/cache
