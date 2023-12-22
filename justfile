@@ -19,6 +19,7 @@ dcsm:
 
 # reload docker services
 reload:
+  git pull
   docker compose up --wait --detach --remove-orphans
 
 # restart the specified service
