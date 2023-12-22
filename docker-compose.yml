@@ -378,6 +378,7 @@ services:
       - ./config/immich/config.env
     volumes:
       - ./storage/immich/uploads:/usr/src/app/upload
+      - /home/igor47/DCIM:/external/igor47/DCIM
     labels:
       # Frontend
       traefik.enable: true
@@ -406,6 +407,7 @@ services:
       - ./config/immich/config.env
     volumes:
       - ./storage/immich/uploads:/usr/src/app/upload
+      - /home/igor47/DCIM:/external/igor47/DCIM
 
   immich.ml:
     container_name: immich_machine_learning
