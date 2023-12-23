@@ -415,3 +415,22 @@ services:
     restart: unless-stopped
     volumes:
       - ./storage/immich/ml/cache:/cache
+
+  # serving static files
+  nginx.purr:
+    image: nginx:1-alpine
+    restart: unless-stopped
+    volumes:
+      - ./config/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./config/nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./storage/tandoor/static:/tandoor/static:ro
+      - ./storage/tandoor/media:/tandoor/media:ro
+    labels:
+      traefik.enable: true
+      cluster.name: purr.services
+      traefik.http.routers.rstatic.rule: Host(`recipes.moomers.org`) && (PathPrefix(`/media/`) || PathPrefix(`/static/`))
+      traefik.http.routers.rstatic.tls: true
+      traefik.http.routers.rstatic.tls.certresolver: le
+      traefik.http.routers.rstatic.entrypoints: https
+      traefik.http.routers.rstatic.service: rstatic
+      traefik.http.services.rstatic.loadbalancer.server.port: 80
