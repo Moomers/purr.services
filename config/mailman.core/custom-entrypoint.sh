@@ -16,4 +16,9 @@ chown -R mailman /mailman
 # Generate the LMTP files for postfix if needed.
 su-exec mailman mailman aliases
 
+# refresh the postfix hash configs
+postmap /mailman/data/postfix_domains
+postmap /mailman/data/postfix_lmtp
+
+# run mailman
 exec su-exec mailman master
