@@ -266,9 +266,9 @@ services:
     - ./storage/mailman.core/var:/mailman
     entrypoint: /usr/local/bin/custom-entrypoint.sh
     stop_grace_period: 30s
-    ports:
-    - "127.0.0.1:8001:8001" # API
-    - "127.0.0.1:8024:8024" # LMTP - incoming emails
+    networks:
+      default:
+        ipv4_address: 172.20.1.131
 
   # mailman web
   mailman.web:

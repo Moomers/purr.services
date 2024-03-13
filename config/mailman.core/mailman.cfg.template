@@ -144,7 +144,7 @@ smtp_pass:
 # Where the LMTP server listens for connections.  Use 127.0.0.1 instead of
 # localhost for Postfix integration, because Postfix only consults DNS
 # (e.g. not /etc/hosts).
-lmtp_host: 127.0.0.1
+lmtp_host: 172.20.1.131
 lmtp_port: 8024
 
 # Where can we find the mail server specific configuration file?  The path can
