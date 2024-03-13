@@ -15,7 +15,7 @@ class: mailman.database.sqlite.SQLiteDatabase
 # will store their data in this database, although external rosters may access
 # other databases in their own way.  This string supports standard
 # 'configuration' substitutions.
-url: sqlite:////opt/mailman/mailman.db
+url: sqlite:///$DATA_DIR/mailman.db
 #url: mysql+pymysql://mailman3:mmpass@localhost/mailman3?charset=utf8&use_unicode=1
 #url: postgres://mailman3:mmpass@localhost/mailman3
 
@@ -25,6 +25,7 @@ debug: no
 site_owner: igor47@moomers.org
 noreply_address: noreply
 default_language: en
+layout: docker
 
 # Membership tests for posting purposes are usually performed by looking at a
 # set of headers, passing the test if any of their values match a member of
@@ -53,6 +54,30 @@ filtered_messages_are_preservable: no
 # unpredictable.
 listname_chars: [-_.0-9a-z]
 
+[paths.docker]
+var_dir: /mailman
+# This is where the Mailman queue files directories will be created.
+queue_dir: $var_dir/queue
+# All list-specific data.
+list_data_dir: $var_dir/lists
+# Directory where log files go.
+log_dir: $var_dir/logs
+# Directory for system-wide locks.
+lock_dir: $var_dir/locks
+# Directory for system-wide data.
+data_dir: $var_dir/data
+# Cache files.
+cache_dir: $var_dir/cache
+# Directory containing Mailman plugins.
+ext_dir: $var_dir/ext
+# Directory where the default IMessageStore puts its messages.
+messages_dir: $var_dir/messages
+# Directory for archive backends to store their messages in.  Archivers should
+# create a subdirectory in here to store their files.
+archive_dir: $var_dir/archives
+# Directory where the default IMessageStore puts its messages.
+template_dir: $var_dir/templates
+
 
 [shell]
 # `mailman shell` (also `withlist`) gives you an interactive prompt that you
@@ -73,7 +98,7 @@ use_ipython: debug
 
 # Set this to allow for command line history if readline is available.  This
 # can be as simple as $var_dir/history.py to put the file in the var directory.
-history_file: /opt/mailman/readline-history.py
+history_file: $data_dir/readline-history.py
 
 
 [webservice]

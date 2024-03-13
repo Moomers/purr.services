@@ -263,8 +263,7 @@ services:
     - ./config/mailman.core/custom-entrypoint.sh:/usr/local/bin/custom-entrypoint.sh
     - ./config/mailman.core/mailman.cfg:/etc/mailman.cfg
     - ./config/mailman.core/mailman-hyperkitty.cfg:/etc/mailman-hyperkitty.cfg
-    - ./storage/mailman.core/opt:/opt/mailman
-    - ./storage/mailman.core/mailman.db:/opt/mailman/mailman.db
+    - ./storage/mailman.core/var:/mailman
     entrypoint: /usr/local/bin/custom-entrypoint.sh
     stop_grace_period: 30s
     ports:
