@@ -80,6 +80,8 @@ mkdirs:
   # tandoor
   mkdir -p {{STORAGE}}/tandoor/media
   mkdir -p {{STORAGE}}/tandoor/static
+  # mailman core
+  mkdir -p {{STORAGE}}/mailman.core/opt
 
 firewall:
   # mailman-web to local mailman on the host

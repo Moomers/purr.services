@@ -252,6 +252,25 @@ services:
       # auth through authentik; we exclude `/write` (in authentik) to allow telegraf
       traefik.http.routers.victoria.middlewares: authentik@file
 
+  mailman.core:
+    image: maxking/mailman-core:0.4 # Use a specific version tag (tag latest is not published)
+    restart: unless-stopped
+    hostname: mailman-core
+    depends_on:
+      dcsm.purr:
+        condition: service_completed_successfully
+    volumes:
+    - ./config/mailman.core/custom-entrypoint.sh:/usr/local/bin/custom-entrypoint.sh
+    - ./config/mailman.core/mailman.cfg:/etc/mailman.cfg
+    - ./config/mailman.core/mailman-hyperkitty.cfg:/etc/mailman-hyperkitty.cfg
+    - ./storage/mailman.core/opt:/opt/mailman
+    - ./storage/mailman.core/mailman.db:/opt/mailman/mailman.db
+    entrypoint: /usr/local/bin/custom-entrypoint.sh
+    stop_grace_period: 30s
+    ports:
+    - "127.0.0.1:8001:8001" # API
+    - "127.0.0.1:8024:8024" # LMTP - incoming emails
+
   # mailman web
   mailman.web:
     image: maxking/mailman-web:0.4 # Use a specific version tag (tag latest is not published)

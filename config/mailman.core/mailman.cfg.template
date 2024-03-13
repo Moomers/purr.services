@@ -1,0 +1,166 @@
+# this is based on the minimal config from here:
+# https://github.com/maxking/docker-mailman/blob/main/core/README.md#running-mailman-core
+
+[runner.retry]
+sleep_time: 10s
+
+[database]
+# The class implementing the IDatabase.
+class: mailman.database.sqlite.SQLiteDatabase
+#class: mailman.database.mysql.MySQLDatabase
+#class: mailman.database.postgresql.PostgreSQLDatabase
+
+# Use this to set the Storm database engine URL.  You generally have one
+# primary database connection for all of Mailman.  List data and most rosters
+# will store their data in this database, although external rosters may access
+# other databases in their own way.  This string supports standard
+# 'configuration' substitutions.
+url: sqlite:////opt/mailman/mailman.db
+#url: mysql+pymysql://mailman3:mmpass@localhost/mailman3?charset=utf8&use_unicode=1
+#url: postgres://mailman3:mmpass@localhost/mailman3
+
+debug: no
+
+[mailman]
+site_owner: igor47@moomers.org
+noreply_address: noreply
+default_language: en
+
+# Membership tests for posting purposes are usually performed by looking at a
+# set of headers, passing the test if any of their values match a member of
+# the list.  Headers are checked in the order given in this variable.  The
+# value From_ means to use the envelope sender.  Field names are case
+# insensitive.  This is a space separate list of headers.
+sender_headers: from from_ reply-to sender
+
+# Mail command processor will ignore mail command lines after designated max.
+email_commands_max_lines: 10
+
+# Default length of time a pending request is live before it is evicted from
+# the pending database.
+pending_request_life: 3d
+
+# How long should files be saved before they are evicted from the cache?
+cache_life: 7d
+
+# Can MIME filtered messages be preserved by list owners?
+filtered_messages_are_preservable: no
+
+# Specify what characters are allowed in list names.  Characters outside of
+# the class [-_.+=!$*{}~0-9a-z] matched case insensitively are never allowed,
+# but this specifies a subset as the only allowable characters.  This must be
+# a valid character class regexp or the effect on list creation is
+# unpredictable.
+listname_chars: [-_.0-9a-z]
+
+
+[shell]
+# `mailman shell` (also `withlist`) gives you an interactive prompt that you
+# can use to interact with an initialized and configured Mailman system.  Use
+# --help for more information.  This section allows you to configure certain
+# aspects of this interactive shell.
+
+# Customize the interpreter prompt.
+prompt: mm>>>
+
+# Banner to show on startup.
+banner: Welcome to the Moomers Mailman Shell. I'm sorry.
+
+# Use IPython as the shell, which must be found on the system.  Valid values
+# are `no`, `yes`, and `debug` where the latter is equivalent to `yes` except
+# that any import errors will be displayed to stderr.
+use_ipython: debug
+
+# Set this to allow for command line history if readline is available.  This
+# can be as simple as $var_dir/history.py to put the file in the var directory.
+history_file: /opt/mailman/readline-history.py
+
+
+[webservice]
+# The hostname at which admin web service resources are exposed.
+hostname: mailman.core
+
+# The port at which the admin web service resources are exposed.
+port: 8001
+
+# Whether or not requests to the web service are secured through SSL.
+use_https: no
+
+# Whether or not to show tracebacks in an HTTP response for a request that
+# raised an exception.
+show_tracebacks: yes
+
+# The API version number for the current (highest) API.
+api_version: 3.1
+
+# The administrative username.
+admin_user: restadmin
+
+# The administrative password.
+admin_pass: $DCSM{MAILMAN_REST_API_PASS}
+
+[mta]
+# The class defining the interface to the incoming mail transport agent.
+#incoming: mailman.mta.exim4.LMTP
+incoming: mailman.mta.postfix.LMTP
+
+# The callable implementing delivery to the outgoing mail transport agent.
+# This must accept three arguments, the mailing list, the message, and the
+# message metadata dictionary.
+outgoing: mailman.mta.deliver.deliver
+
+# How to connect to the outgoing MTA.  If smtp_user and smtp_pass is given,
+# then Mailman will attempt to log into the MTA when making a new connection.
+smtp_host: 172.20.1.1
+smtp_port: 25
+smtp_user:
+smtp_pass:
+
+# Where the LMTP server listens for connections.  Use 127.0.0.1 instead of
+# localhost for Postfix integration, because Postfix only consults DNS
+# (e.g. not /etc/hosts).
+lmtp_host: 127.0.0.1
+lmtp_port: 8024
+
+# Where can we find the mail server specific configuration file?  The path can
+# be either a file system path or a Python import path.  If the value starts
+# with python: then it is a Python import path, otherwise it is a file system
+# path.  File system paths must be absolute since no guarantees are made about
+# the current working directory.  Python paths should not include the trailing
+# .cfg, which the file must end with.
+#configuration: python:mailman.config.exim4
+configuration: python:mailman.config.postfix
+
+# The following lines are specific to mailing lists archiving using
+# HyperKitty. They require 'python3-mailman-hyperkitty' to be installed
+# and will produce errors otherwise.
+# 
+# If you don't want to use HyperKitty, please comment them out.
+
+[archiver.hyperkitty]
+class: mailman_hyperkitty.Archiver
+enable: yes
+configuration: /etc/mailman-hyperkitty.cfg
+
+[antispam]
+# This section defines basic antispam detection settings.
+#
+# # This value contains lines which specify RFC 822 headers in the email to
+# # check for spamminess.  Each line contains a `key: value` pair, where the key
+# # is the header to check and the value is a Python regular expression to match
+# # against the header's value.  Multiple checks should be entered as multiline
+# # value with leading spaces:
+# # ::
+# #     header_checks:
+# #       X-Spam: (yes|maybe)
+# #       Authentication-Results: mail.example.com; dmarc=(fail|quarantine)
+# #
+# # The header value and regular expression are always matched
+# # case-insensitively.
+header_checks:
+  X-Spam-Status: ^\s*Yes.*
+#
+# # The chain to jump to if any of the header patterns matches.  This must be
+# # the name of an existing chain such as 'discard', 'reject', 'hold', or
+# # 'accept', otherwise 'hold' will be used.
+jump_chain: discard
