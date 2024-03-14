@@ -167,6 +167,82 @@ class: mailman_hyperkitty.Archiver
 enable: yes
 configuration: /etc/mailman-hyperkitty.cfg
 
+[ARC]
+# i generated the keys on the host filesystem following instructions here:
+# https://tecadmin.net/setup-dkim-with-postfix-on-ubuntu-debian/
+# opendkim-genkey -b 2048 -d moomers.org -D /etc/opendkim/keys -s arc -v
+# then i added the public key to the zone and verified:
+# opendkim-testkey -d moomers.org -s arc -vvv
+
+# The general implementation of ARC within Mailman is addition of two
+# additional handlers to the pipeline.  One, at the very beginning of the
+# pipeline cryptographically validaties the incomming ARC headers before the
+# message has been modified, and appends its results to the
+# Authentication-Results header.
+#
+# The second handler is at the end of the pipeline.  It cryptographically
+# signs the message, with all modifications that have been made, along
+# with the analysis of the validation handler, and adds its output as
+# a new set of ARC header fields.
+
+# This flag globally enables ARC signing & validation. To enable, set this to
+# yes.
+enabled: yes
+
+# DKIM & DMARC authentication checks on incoming email is critical to using ARC
+# successfully. Mailman can do these check on its own, but if you already perform
+# these checks earlier in your pipeline, say via a milter previous to Mailman,
+# they can be used instead, as long as you specify your domain as a trusted
+# domain below.  If those checks are not placed in an Authentication-Results
+# header from a trusted domain they will be ignored.
+dmarc: yes
+dkim: yes
+
+# This is the domain name as which Mailman identifies in any authentication
+# headers it generates. Mandatory to set for ARC signing to work.
+authserv_id: moomers.org
+
+# Trusted Domains
+#
+# This list should include all additional domains
+# that you manage that may be handling your incoming mail
+# Only necessary to update if there are local domains or subdomains
+# that are performing DKIM, DMARC, or SPF checks.
+#
+#     trusted_authserv_ids: subdomain.your_domain.com, trusted_other_domain.com
+trusted_authserv_ids: moomers.org
+
+# Key Management
+#
+# In order for your server to be able to cryptographical sign its messages
+# a DKIM public/private key pair will need to be created.
+# See http://www.gettingemaildelivered.com/dkim-explained-how-to-set-up-and-use-domainkeys-identified-mail-effectively
+# for reference.  The following parameters let the software find your
+# private & public keys
+#
+# .. note::
+#
+#    Some versions of OpenSSL generate private keys which some versions of
+#    dkimpy (the library used by Mailman for handling ARC) cannot read.
+#    This manifests in "Unparsable private key" exceptions while processing
+#    email. If you encounter this, try to regenerate the RSA key with the
+#    -traditional flag.
+#
+# ::
+#     privkey: /some/location/yourprivatekey.pem
+#     selector: test
+#     domain: your_domain.com
+privkey: /etc/arc.private
+selector: arc
+domain: moomers.org
+
+# This configures the headers that will be cryptographically signed
+# This list is what is recommended by the DKIM & ARC specifications.
+# Inclusion of the From header is mandatory.
+sig_headers: From, Sender, Reply-To, Subject, Date, Message-ID, To, Cc, MIME-Version, Content-Type, Content-Transfer-Encoding, Content-ID, Content-Description, Resent-Date, Resent-From, Resent-Sender, Resent-To, Resent-Cc, Resent-Message-ID, In-Reply-To, References, List-Id, List-Help, List-Unsubscribe, List-Subscribe, List-Post, List-Owner, List-Archive
+
+
+
 [antispam]
 # This section defines basic antispam detection settings.
 #

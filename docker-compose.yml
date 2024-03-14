@@ -260,6 +260,7 @@ services:
       dcsm.purr:
         condition: service_completed_successfully
     volumes:
+    - /etc/opendkim/keys/arc.private:/etc/arc.private
     - ./config/mailman.core/custom-entrypoint.sh:/usr/local/bin/custom-entrypoint.sh
     - ./config/mailman.core/mailman.cfg:/etc/mailman.cfg
     - ./config/mailman.core/mailman-hyperkitty.cfg:/etc/mailman-hyperkitty.cfg
