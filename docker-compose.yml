@@ -100,7 +100,7 @@ services:
       - ./config/postgres/default_creds.env
 
   authentik:
-    image: ghcr.io/goauthentik/server:2023.10
+    image: ghcr.io/goauthentik/server:2024.4
     restart: unless-stopped
     depends_on:
       authentik.worker:
@@ -126,7 +126,7 @@ services:
       - ./config/authentik/creds.env
 
   authentik.worker:
-    image: ghcr.io/goauthentik/server:2023.10
+    image: ghcr.io/goauthentik/server:2024.4
     restart: unless-stopped
     depends_on:
       postgres.purr:
@@ -389,7 +389,7 @@ services:
 
   immich.micro:
     container_name: immich_microservices
-    image: ghcr.io/immich-app/immich-server:${IMMICH_VERSION:-release}
+    image: ghcr.io/immich-app/immich-server:release
     restart: unless-stopped
     command: [ "start.sh", "microservices" ]
     depends_on:
