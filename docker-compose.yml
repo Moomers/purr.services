@@ -363,7 +363,6 @@ services:
     container_name: immich_server
     image: ghcr.io/immich-app/immich-server:release
     restart: unless-stopped
-    command: [ "start.sh", "immich" ]
     depends_on:
       immich.db:
         condition: service_healthy
@@ -384,27 +383,6 @@ services:
       traefik.http.routers.immich.tls: true
       traefik.http.routers.immich.tls.certresolver: le
       traefik.http.routers.immich.entrypoints: https
-
-  immich.micro:
-    container_name: immich_microservices
-    image: ghcr.io/immich-app/immich-server:release
-    restart: unless-stopped
-    command: [ "start.sh", "microservices" ]
-    depends_on:
-      immich.db:
-        condition: service_healthy
-      redis.purr:
-        condition: service_healthy
-      dcsm.purr:
-        condition: service_completed_successfully
-    # extends:
-    #   file: hwaccel.yml
-    #   service: hwaccel
-    env_file:
-      - ./config/immich/config.env
-    volumes:
-      - ./storage/immich/uploads:/usr/src/app/upload
-      - /home/igor47/DCIM:/external/igor47/DCIM
 
   immich.ml:
     container_name: immich_machine_learning
