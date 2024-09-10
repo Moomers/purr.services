@@ -57,7 +57,7 @@ services:
     labels:
       traefik.enable: true
       cluster.name: purr.services
-      traefik.http.routers.mmrs.rule: Host(`mmrs.link`,`www.mmrs.link`)
+      traefik.http.routers.mmrs.rule: "Host(`mmrs.link`) || Host(`www.mmrs.link`)"
       traefik.http.routers.mmrs.tls: true
       traefik.http.routers.mmrs.tls.certresolver: cf
       traefik.http.routers.mmrs.entrypoints: https
