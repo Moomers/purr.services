@@ -294,7 +294,7 @@ services:
     labels:
       traefik.enable: true
       cluster.name: purr.services
-      traefik.http.routers.lists.rule: Host(`mailman.moomers.org`, `lists.moomers.org`)
+      traefik.http.routers.lists.rule: "Host(`mailman.moomers.org`) || Host(`lists.moomers.org`)"
       traefik.http.routers.lists.tls: true
       traefik.http.routers.lists.tls.certresolver: le
       traefik.http.routers.lists.entrypoints: https
