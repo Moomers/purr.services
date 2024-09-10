@@ -70,6 +70,10 @@ http:
           - X-authentik-meta-version
 
 accessLog:
-  filters:
-    statusCodes:
-      - "500-599"
+  format: json
+  fields:
+    headers:
+      defaultMode: drop
+      names:
+          User-Agent: keep
+          Content-Type: keep
