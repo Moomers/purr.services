@@ -35,6 +35,7 @@ postgres-init: dcsm
   docker compose exec -it postgres.purr /init_scripts/authentik_db.sh
   docker compose exec -it postgres.purr /init_scripts/synapse_db.sh
   docker compose exec -it postgres.purr /init_scripts/tandoor.sh
+  docker compose exec -it postgres.purr /init_scripts/hedgedoc.sh
 
 # make the directory structure for the storage volumes
 mkdirs:

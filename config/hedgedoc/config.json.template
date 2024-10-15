@@ -1,0 +1,25 @@
+{
+  "production": {
+    "db": {
+      "dialect": "postgres",
+      "username": "$DCSM{HEDGEDOC_POSTGRES_USER}",
+      "password": "$DCSM{HEDGEDOC_POSTGRES_PASS}",
+      "database": "$DCSM{HEDGEDOC_POSTGRES_DB}",
+      "host": "postgres.purr"
+    },
+    "oauth2": {
+      "providerName": "Moomers Auth",
+      "clientID": "$DCSM{HEDGEDOC_CLIENT_ID}",
+      "clientSecret": "$DCSM{HEDGEDOC_CLIENT_SECRET}",
+      "scope": "openid email profile",
+      "authorizationURL": "https://auth.moomers.org/application/o/authorize/",
+      "userProfileURL": "https://auth.moomers.org/application/o/userinfo/",
+      "tokenURL": "https://auth.moomers.org/application/o/token/",
+      "userProfileUsernameAttr": "preferred_username",
+      "userProfileDisplayNameAttr": "name",
+      "userProfileEmailAttr": "email"
+    },
+    "domain": "notes.moomers.org",
+    "sessionSecret": "$DCSM{HEDGEDOC_SESSION_SECRET}"
+  }
+}
