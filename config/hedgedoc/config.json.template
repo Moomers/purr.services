@@ -20,6 +20,11 @@
       "userProfileEmailAttr": "email"
     },
     "domain": "notes.moomers.org",
-    "sessionSecret": "$DCSM{HEDGEDOC_SESSION_SECRET}"
+    "sessionSecret": "$DCSM{HEDGEDOC_SESSION_SECRET}",
+    "protocolUseSSL": true,
+    "hsts": {
+      "enable": true
+    },
+    "email": false
   }
 }
