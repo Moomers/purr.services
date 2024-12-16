@@ -386,7 +386,7 @@ services:
 
   immich.server:
     container_name: immich_server
-    image: ghcr.io/immich-app/immich-server:release
+    image: ghcr.io/immich-app/immich-server:v1.118.2
     restart: unless-stopped
     depends_on:
       immich.db:
@@ -400,6 +400,8 @@ services:
     volumes:
       - ./storage/immich/uploads:/usr/src/app/upload
       - /home/igor47/DCIM:/external/igor47/DCIM
+    healthcheck:
+      disable: false
     labels:
       # Frontend
       traefik.enable: true
@@ -411,10 +413,12 @@ services:
 
   immich.ml:
     container_name: immich_machine_learning
-    image: ghcr.io/immich-app/immich-machine-learning:release
+    image: ghcr.io/immich-app/immich-machine-learning:v1.118.2
     restart: unless-stopped
     volumes:
       - ./storage/immich/ml/cache:/cache
+    healthcheck:
+      disable: false
 
   # serving static files
   nginx.purr:
