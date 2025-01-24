@@ -304,6 +304,28 @@ services:
       traefik.http.routers.passwords.entrypoints: https
       traefik.http.services.passwords.loadbalancer.server.port: 8080
 
+  # time planner hosted at plantime.moomers.org
+  # https://support.rallly.co/self-hosting/docker-compose
+  # https://github.com/lukevella/rallly-selfhosted/blob/main/docker-compose.yml
+  rally.purr:
+    # https://hub.docker.com/r/lukevella/rallly/tags
+    image: lukevella/rallly:3
+    restart: unless-stopped
+    depends_on:
+      dcsm.purr:
+        condition: service_completed_successfully
+      postgres.purr:
+        condition: service_healthy
+    env_file:
+      - ./config/rally/config.env
+    labels:
+      traefik.enable: true
+      cluster.name: purr.services
+      traefik.http.routers.rally.rule: Host(`plantime.moomers.org`)
+      traefik.http.routers.rally.tls: true
+      traefik.http.routers.rally.tls.certresolver: le
+      traefik.http.routers.rally.entrypoints: https
+
   mailman.core:
     image: maxking/mailman-core:0.4 # Use a specific version tag (tag latest is not published)
     restart: unless-stopped
