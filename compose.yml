@@ -326,6 +326,31 @@ services:
       traefik.http.routers.rally.tls.certresolver: le
       traefik.http.routers.rally.entrypoints: https
 
+  # file sharing tool
+  # https://github.com/eikek/sharry/blob/master/docker/docker-compose.yml
+  # https://eikek.github.io/sharry/doc/configure
+  fileshare.purr:
+    # https://hub.docker.com/r/eikek0/sharry/tags
+    image: eikek0/sharry:latest
+    restart: unless-stopped
+    command: /opt/sharry.conf
+    depends_on:
+      dcsm.purr:
+        condition: service_completed_successfully
+      postgres.purr:
+        condition: service_healthy
+    volumes:
+      - ./config/sharry/sharry.conf:/opt/sharry.conf
+      - ./storage/sharry/uploads:/uploads
+    labels:
+      traefik.enable: true
+      cluster.name: purr.services
+      traefik.http.routers.fileshare.rule: Host(`fileshare.moomers.org`)
+      traefik.http.routers.fileshare.tls: true
+      traefik.http.routers.fileshare.tls.certresolver: le
+      traefik.http.routers.fileshare.entrypoints: https
+      traefik.http.services.fileshare.loadbalancer.server.port: 9090
+   
   mailman.core:
     image: maxking/mailman-core:0.4 # Use a specific version tag (tag latest is not published)
     restart: unless-stopped
@@ -334,11 +359,11 @@ services:
       dcsm.purr:
         condition: service_completed_successfully
     volumes:
-    - /etc/opendkim/keys/arc.private:/etc/arc.private
-    - ./config/mailman.core/custom-entrypoint.sh:/usr/local/bin/custom-entrypoint.sh
-    - ./config/mailman.core/mailman.cfg:/etc/mailman.cfg
-    - ./config/mailman.core/mailman-hyperkitty.cfg:/etc/mailman-hyperkitty.cfg
-    - ./storage/mailman.core/var:/mailman
+      - /etc/opendkim/keys/arc.private:/etc/arc.private
+      - ./config/mailman.core/custom-entrypoint.sh:/usr/local/bin/custom-entrypoint.sh
+      - ./config/mailman.core/mailman.cfg:/etc/mailman.cfg
+      - ./config/mailman.core/mailman-hyperkitty.cfg:/etc/mailman-hyperkitty.cfg
+      - ./storage/mailman.core/var:/mailman
     entrypoint: /usr/local/bin/custom-entrypoint.sh
     stop_grace_period: 30s
     networks:
