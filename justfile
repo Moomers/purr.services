@@ -39,6 +39,7 @@ postgres-init: dcsm
   docker compose exec -it postgres.purr /init_scripts/passbolt_db.sh
   docker compose exec -it postgres.purr /init_scripts/rally_db.sh
   docker compose exec -it postgres.purr /init_scripts/sharry_db.sh
+  docker compose exec -it postgres.purr /init_scripts/psono_db.sh
 
 # make the directory structure for the storage volumes
 mkdirs:

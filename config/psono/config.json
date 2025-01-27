@@ -1,0 +1,20 @@
+{
+  "backend_servers": [{
+    "title": "Psono.pw",
+    "url": "https://passwords.moomers.org/server"
+  }],
+  "base_url": "https://passwords.moomers.org/",
+  "allow_custom_server": true,
+  "allow_registration": true,
+  "allow_lost_password": true,
+  "disable_download_bar": false,
+  "remember_me_default": true,
+  "trust_device_default": false,
+  "authentication_methods": ["OIDC"],
+  "saml_provider": [],
+  "oidc_provider": [{
+    "title": "Moomers Auth",
+    "provider_id": 1,
+    "button_name": "Login with Moomers"
+  }]
+}
