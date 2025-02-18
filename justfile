@@ -40,6 +40,7 @@ postgres-init: dcsm
   docker compose exec -it postgres.purr /init_scripts/rally_db.sh
   docker compose exec -it postgres.purr /init_scripts/sharry_db.sh
   docker compose exec -it postgres.purr /init_scripts/psono_db.sh
+  docker compose exec -it postgres.purr /init_scripts/vikunja_db.sh
 
 # make the directory structure for the storage volumes
 mkdirs:
@@ -87,6 +88,9 @@ mkdirs:
   mkdir -p {{STORAGE}}/tandoor/static
   # mailman core
   mkdir -p {{STORAGE}}/mailman.core/var
+  # vikunja
+  kmdir -p {{STORAGE}}/vikunja/files
+  chown 1000:1000 {{STORAGE}}/vikunja/files
 
 firewall:
   # mailman-web to local mailman on the host
