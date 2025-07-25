@@ -284,11 +284,11 @@ sharry.restserver {
           enabled = true
           name = "Moomers Auth"
           icon = "fa-paw"
-          scope = ""
+          scope = "email openid profile"
           authorize-url = "https://auth.moomers.org/application/o/authorize/"
           token-url = "https://auth.moomers.org/application/o/token/"
           user-url = "https://auth.moomers.org/application/o/userinfo/"
-          user-id-key = "preferred_username"
+          user-id-key = "email"
           user-email-key = "email"
           client-id = "$DCSM{SHARRY_OIDC_CLIENT_ID}"
           client-secret = "$DCSM{SHARRY_OIDC_CLIENT_SECRET}"
