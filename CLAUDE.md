@@ -4,7 +4,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Overview
 
-This repository manages self-hosted web services on `purr.services` using Docker Compose. It includes 23+ services with Traefik reverse proxy, PostgreSQL database, and various web applications.
+This repository manages self-hosted web services on `purr.services` using Docker Compose.
+It includes 23+ services with Traefik reverse proxy, PostgreSQL database, and various web applications.
+The repo itself is usually modified on the author's laptop, while the services run on a different machine (purr).
 
 ## Key Commands
 
@@ -25,7 +27,9 @@ just list
 ```
 
 ### Secrets Management
+
 The repository uses DCSM (Docker Compose Secrets Manager) with encrypted secrets:
+
 ```bash
 # Process all config templates using encrypted secrets
 just dcsm
@@ -38,6 +42,7 @@ just decrypt
 ```
 
 ### Database Initialization
+
 Initialize PostgreSQL databases for services:
 ```bash
 # Initialize all databases

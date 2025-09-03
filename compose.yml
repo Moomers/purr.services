@@ -443,27 +443,6 @@ services:
       traefik.http.routers.tandoor.tls.certresolver: le
       traefik.http.routers.tandoor.entrypoints: https
 
-  portainer.purr:
-    image: portainer/portainer-ce:latest
-    restart: unless-stopped
-    command: "--http-enabled"
-    volumes:
-      - ./storage/portainer/data:/data
-      # So that it can monitor containers
-      - /var/run/docker.sock:/var/run/docker.sock
-    labels:
-      # Frontend
-      traefik.enable: true
-      cluster.name: purr.services
-      traefik.http.routers.ptweb.rule: Host(`portainer.moomers.org`)
-      traefik.http.routers.ptweb.tls: true
-      traefik.http.routers.ptweb.tls.certresolver: le
-      traefik.http.routers.ptweb.entrypoints: https
-      traefik.http.routers.ptweb.service: ptweb
-      traefik.http.services.ptweb.loadbalancer.server.port: 9000
-      # Edge is on port 8000 and is also just an http port
-      #traefik.http.routers.ptedge.rule: Host(`ptedge.portainer.moomers.org`)
-  
   immich.db:
     image: tensorchord/pgvecto-rs:pg14-v0.2.0@sha256:90724186f0a3517cf6914295b5ab410db9ce23190a2d9d0b9dd6463e3fa298f0
     restart: unless-stopped
