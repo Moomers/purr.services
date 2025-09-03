@@ -359,9 +359,9 @@ services:
       - NODE_ENV=production
       - PSITRANSFER_TRUSTPROXY=true
       - PSITRANSFER_UPLOADDIR=/data
-      - PSITRANSFER_ADMINPASS=
-      - PSITRANSFER_UPLOADPASS=
       - PSITRANSFER_DEFAULTRETENTION=604800
+    env_file:
+      - ./config/psitransfer/creds.env
     volumes:
       - ./storage/psitransfer/data:/data
     labels:
