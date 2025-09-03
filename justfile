@@ -38,9 +38,9 @@ postgres-init: dcsm
   docker compose exec -it postgres.purr /init_scripts/hedgedoc.sh
   docker compose exec -it postgres.purr /init_scripts/passbolt_db.sh
   docker compose exec -it postgres.purr /init_scripts/rally_db.sh
-  docker compose exec -it postgres.purr /init_scripts/sharry_db.sh
   docker compose exec -it postgres.purr /init_scripts/psono_db.sh
   docker compose exec -it postgres.purr /init_scripts/vikunja_db.sh
+  docker compose exec -it postgres.purr /init_scripts/sharry_cleanup.sh
 
 # make the directory structure for the storage volumes
 mkdirs:
@@ -89,8 +89,10 @@ mkdirs:
   # mailman core
   mkdir -p {{STORAGE}}/mailman.core/var
   # vikunja
-  kmdir -p {{STORAGE}}/vikunja/files
+  mkdir -p {{STORAGE}}/vikunja/files
   chown 1000:1000 {{STORAGE}}/vikunja/files
+  # psitransfer
+  mkdir -p {{STORAGE}}/psitransfer/data
 
 firewall:
   # mailman-web to local mailman on the host

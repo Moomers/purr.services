@@ -347,22 +347,23 @@ services:
       traefik.http.routers.tasks.entrypoints: https
       traefik.http.services.tasks.loadbalancer.server.port: 3457
 
-  # file sharing tool
-  # https://github.com/eikek/sharry/blob/master/docker/docker-compose.yml
-  # https://eikek.github.io/sharry/doc/configure
+  # file sharing tool - PsiTransfer
+  # https://github.com/psi-4ward/psitransfer
   fileshare.purr:
-    # https://hub.docker.com/r/eikek0/sharry/tags
-    image: eikek0/sharry:latest
+    image: psitrax/psitransfer:latest
     restart: unless-stopped
-    command: /opt/sharry.conf
     depends_on:
       dcsm.purr:
         condition: service_completed_successfully
-      postgres.purr:
-        condition: service_healthy
+    environment:
+      - NODE_ENV=production
+      - PSITRANSFER_TRUSTPROXY=true
+      - PSITRANSFER_UPLOADDIR=/data
+      - PSITRANSFER_ADMINPASS=
+      - PSITRANSFER_UPLOADPASS=
+      - PSITRANSFER_DEFAULTRETENTION=604800
     volumes:
-      - ./config/sharry/sharry.conf:/opt/sharry.conf
-      - ./storage/sharry/uploads:/uploads
+      - ./storage/psitransfer/data:/data
     labels:
       traefik.enable: true
       cluster.name: purr.services
@@ -370,7 +371,7 @@ services:
       traefik.http.routers.fileshare.tls: true
       traefik.http.routers.fileshare.tls.certresolver: le
       traefik.http.routers.fileshare.entrypoints: https
-      traefik.http.services.fileshare.loadbalancer.server.port: 9090
+      traefik.http.services.fileshare.loadbalancer.server.port: 3000
    
   mailman.core:
     image: maxking/mailman-core:0.4 # Use a specific version tag (tag latest is not published)

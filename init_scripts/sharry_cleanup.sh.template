@@ -1,0 +1,24 @@
+#!/bin/bash
+set -e
+
+psql="psql -v ON_ERROR_STOP=1 --username $DCSM{POSTGRES_USER} --dbname postgres"
+
+echo "Cleaning up Sharry database and user..."
+
+# Drop database if it exists
+exists=`$psql -tAc "SELECT 1 FROM pg_database WHERE datname='$DCSM{SHARRY_PG_DB}'"`
+if [ "$exists" = "1" ]; then
+  echo "Dropping database '$DCSM{SHARRY_PG_DB}'..."
+  $psql -tAc "DROP DATABASE IF EXISTS $DCSM{SHARRY_PG_DB};"
+fi
+
+# Drop user if it exists
+exists=`$psql -tAc "SELECT 1 FROM pg_roles WHERE rolname='$DCSM{SHARRY_PG_USER}'"`
+if [ "$exists" = "1" ]; then
+  echo "Dropping user '$DCSM{SHARRY_PG_USER}'..."
+  $psql -tAc "DROP ROLE IF EXISTS $DCSM{SHARRY_PG_USER};"
+fi
+
+echo "Sharry database cleanup complete."
+
+# vim:ft=bash
