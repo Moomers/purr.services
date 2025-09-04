@@ -24,7 +24,7 @@ reload:
 
 # restart the specified service
 restart service:
-  docker compose restart {{service}}
+  docker compose up --detach --wait --remove-orphans --force-recreate {{service}}
 
 # log output from all (or specified) service
 logs service="":
