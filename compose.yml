@@ -98,7 +98,7 @@ services:
       - ./config/postgres/default_creds.env
 
   authentik:
-    image: ghcr.io/goauthentik/server:2025.2.4
+    image: ghcr.io/goauthentik/server:2025.10.3
     restart: unless-stopped
     depends_on:
       authentik.worker:
@@ -124,7 +124,7 @@ services:
       - ./config/authentik/creds.env
 
   authentik.worker:
-    image: ghcr.io/goauthentik/server:2025.2.4
+    image: ghcr.io/goauthentik/server:2025.10.3
     restart: unless-stopped
     depends_on:
       postgres.purr:
