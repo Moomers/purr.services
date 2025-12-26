@@ -113,7 +113,6 @@ services:
       traefik.http.routers.authentik.entrypoints: https
       traefik.http.services.authentik.loadbalancer.server.port: 9000
     environment:
-      AUTHENTIK_REDIS__HOST: redis.purr
       AUTHENTIK_POSTGRESQL__HOST: postgres.purr
       AUTHENTIK_EMAIL__HOST: 172.20.1.1
       AUTHENTIK_EMAIL__FROM: "Moomers Auth <authentik@moomers.org>"
@@ -129,13 +128,10 @@ services:
     depends_on:
       postgres.purr:
         condition: service_healthy
-      redis.purr:
-        condition: service_healthy
       dcsm.purr:
         condition: service_completed_successfully
     command: worker
     environment:
-      AUTHENTIK_REDIS__HOST: redis.purr
       AUTHENTIK_POSTGRESQL__HOST: postgres.purr
       AUTHENTIK_EMAIL__HOST: 172.20.1.1
       AUTHENTIK_EMAIL__FROM: "Moomers Auth <authentik@moomers.org>"
