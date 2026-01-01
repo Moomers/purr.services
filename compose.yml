@@ -461,7 +461,7 @@ services:
 
   immich.server:
     container_name: immich_server
-    image: ghcr.io/immich-app/immich-server:v1.133.1
+    image: ghcr.io/immich-app/immich-server:v2.4.1
     restart: unless-stopped
     depends_on:
       immich.db:
@@ -473,7 +473,7 @@ services:
     env_file:
       - ./config/immich/config.env
     volumes:
-      - ./storage/immich/uploads:/usr/src/app/upload
+      - ./storage/immich/uploads:/data
       - /home/igor47/DCIM:/external/igor47/DCIM
     healthcheck:
       disable: false
@@ -488,7 +488,7 @@ services:
 
   immich.ml:
     container_name: immich_machine_learning
-    image: ghcr.io/immich-app/immich-machine-learning:v1.133.1
+    image: ghcr.io/immich-app/immich-machine-learning:v2.4.1
     restart: unless-stopped
     volumes:
       - ./storage/immich/ml/cache:/cache
