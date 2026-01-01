@@ -308,11 +308,12 @@ auth:
     enabled: false
   
   # from: https://vikunja.io/docs/openid-example-configurations/#authentik
+  # v1.0+ uses map format for providers (key = redirect path segment)
   openid:
     enabled: true
-    redirecturl: "https://vikunja.mydomain.com/auth/openid/"
     providers:
-      - name: Moomers
+      moomers:
+        name: Moomers
         authurl: "https://auth.moomers.org/application/o/tasks/"
         logouturl: "https://auth.moomers.org/application/o/tasks/end-session/"
         clientid: "$DCSM{VIKUNJA_OIDC_CLIENT_ID}"
