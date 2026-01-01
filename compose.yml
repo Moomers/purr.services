@@ -170,7 +170,7 @@ services:
 
   # grafana
   grafana.purr:
-    image: grafana/grafana-enterprise
+    image: grafana/grafana-enterprise:12.2.1
     restart: unless-stopped
     depends_on:
       dcsm.purr:
@@ -196,7 +196,7 @@ services:
   # see:
   # https://github.com/VictoriaMetrics/VictoriaMetrics/blob/master/deployment/docker/docker-compose.yml
   victoria.purr:
-    image: victoriametrics/victoria-metrics
+    image: victoriametrics/victoria-metrics:v1.132.0
     restart: unless-stopped
     depends_on:
       dcsm.purr:
@@ -224,7 +224,7 @@ services:
   # https://docs.hedgedoc.org/setup/docker/
   notes.purr:
     # Make sure to use the latest release from https://hedgedoc.org/latest-release
-    image: quay.io/hedgedoc/hedgedoc:1.10.3
+    image: quay.io/hedgedoc/hedgedoc:1.10.5
     restart: unless-stopped
     depends_on:
       dcsm.purr:
@@ -346,7 +346,7 @@ services:
   # file sharing tool - PsiTransfer
   # https://github.com/psi-4ward/psitransfer
   fileshare.purr:
-    image: psitrax/psitransfer:latest
+    image: psitrax/psitransfer:v2.3.0
     restart: unless-stopped
     depends_on:
       dcsm.purr:
