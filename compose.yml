@@ -441,13 +441,15 @@ services:
       traefik.http.routers.tandoor.entrypoints: https
 
   immich.db:
-    image: tensorchord/pgvecto-rs:pg14-v0.2.0@sha256:90724186f0a3517cf6914295b5ab410db9ce23190a2d9d0b9dd6463e3fa298f0
+    image: ghcr.io/immich-app/postgres:14-vectorchord0.3.0-pgvectors0.2.0
     restart: unless-stopped
     depends_on:
       dcsm.purr:
         condition: service_completed_successfully
     env_file:
       - ./config/immich/db.env
+    environment:
+      DB_STORAGE_TYPE: HDD
     volumes:
       - ./storage/immich/db/data:/var/lib/postgresql/data
     healthcheck:
@@ -459,7 +461,7 @@ services:
 
   immich.server:
     container_name: immich_server
-    image: ghcr.io/immich-app/immich-server:v1.131.3
+    image: ghcr.io/immich-app/immich-server:v1.133.1
     restart: unless-stopped
     depends_on:
       immich.db:
@@ -486,7 +488,7 @@ services:
 
   immich.ml:
     container_name: immich_machine_learning
-    image: ghcr.io/immich-app/immich-machine-learning:v1.131.3
+    image: ghcr.io/immich-app/immich-machine-learning:v1.133.1
     restart: unless-stopped
     volumes:
       - ./storage/immich/ml/cache:/cache
