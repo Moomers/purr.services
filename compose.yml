@@ -301,7 +301,7 @@ services:
   # https://github.com/lukevella/rallly-selfhosted/blob/main/docker-compose.yml
   rally.purr:
     # https://hub.docker.com/r/lukevella/rallly/tags
-    image: lukevella/rallly:3
+    image: lukevella/rallly:4.5.6
     restart: unless-stopped
     depends_on:
       dcsm.purr:
