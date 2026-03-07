@@ -98,7 +98,7 @@ services:
       - ./config/postgres/default_creds.env
 
   authentik:
-    image: ghcr.io/goauthentik/server:2025.10.3
+    image: ghcr.io/goauthentik/server:2026.2.1
     restart: unless-stopped
     depends_on:
       authentik.worker:
@@ -117,13 +117,12 @@ services:
       AUTHENTIK_EMAIL__HOST: 172.20.1.1
       AUTHENTIK_EMAIL__FROM: "Moomers Auth <authentik@moomers.org>"
     volumes:
-      - ./storage/authentik/media:/media
-      - ./storage/authentik/templates:/templates
+      - ./storage/authentik/data:/data
     env_file:
       - ./config/authentik/creds.env
 
   authentik.worker:
-    image: ghcr.io/goauthentik/server:2025.10.3
+    image: ghcr.io/goauthentik/server:2026.2.1
     restart: unless-stopped
     depends_on:
       postgres.purr:
@@ -143,9 +142,7 @@ services:
     # (1000:1000 by default)
     user: root
     volumes:
-      - ./storage/authentik/media:/media
-      - ./storage/authentik/templates:/templates
-      - ./storage/authentik/certs:/certs
+      - ./storage/authentik/data:/data
       #- /var/run/docker.sock:/var/run/docker.sock
     env_file:
       - ./config/authentik/creds.env
