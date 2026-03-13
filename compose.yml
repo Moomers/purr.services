@@ -221,7 +221,7 @@ services:
   # https://docs.hedgedoc.org/setup/docker/
   notes.purr:
     # Make sure to use the latest release from https://hedgedoc.org/latest-release
-    image: quay.io/hedgedoc/hedgedoc:1.10.5
+    image: quay.io/hedgedoc/hedgedoc:1.10.7
     restart: unless-stopped
     depends_on:
       dcsm.purr:
