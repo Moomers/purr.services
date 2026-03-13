@@ -458,7 +458,7 @@ services:
 
   immich.server:
     container_name: immich_server
-    image: ghcr.io/immich-app/immich-server:v2.4.1
+    image: ghcr.io/immich-app/immich-server:v2.5.5
     restart: unless-stopped
     depends_on:
       immich.db:
@@ -485,7 +485,7 @@ services:
 
   immich.ml:
     container_name: immich_machine_learning
-    image: ghcr.io/immich-app/immich-machine-learning:v2.4.1
+    image: ghcr.io/immich-app/immich-machine-learning:v2.5.5
     restart: unless-stopped
     volumes:
       - ./storage/immich/ml/cache:/cache
