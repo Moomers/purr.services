@@ -167,7 +167,7 @@ services:
 
   # grafana
   grafana.purr:
-    image: grafana/grafana-enterprise:12.2.1
+    image: grafana/grafana-enterprise:12.4.1
     restart: unless-stopped
     depends_on:
       dcsm.purr:
@@ -193,7 +193,7 @@ services:
   # see:
   # https://github.com/VictoriaMetrics/VictoriaMetrics/blob/master/deployment/docker/docker-compose.yml
   victoria.purr:
-    image: victoriametrics/victoria-metrics:v1.132.0
+    image: victoriametrics/victoria-metrics:v1.137.0
     restart: unless-stopped
     depends_on:
       dcsm.purr:
