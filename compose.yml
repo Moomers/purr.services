@@ -321,7 +321,7 @@ services:
   #
   tasks.purr:
     # https://hub.docker.com/r/vikunja/vikunja/tags
-    image: vikunja/vikunja:1.1.0
+    image: vikunja/vikunja:2.1.0
     restart: unless-stopped
     depends_on:
       dcsm.purr:
