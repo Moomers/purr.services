@@ -93,6 +93,8 @@ mkdirs:
   chown 1000:1000 {{STORAGE}}/vikunja/files
   # psitransfer
   mkdir -p {{STORAGE}}/psitransfer/data
+  # forkit
+  mkdir -p {{STORAGE}}/forkit/data
 
 firewall:
   # mailman-web to local mailman on the host
